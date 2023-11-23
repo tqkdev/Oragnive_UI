@@ -1,0 +1,53 @@
+@import 'normalize.css';
+
+:root {
+    --primary: #fe2c55;
+    --black: #000;
+    --white: #fff;
+    --background: #f7f6f2;
+    --border: #81b03f;
+    --text-color-2: #666;
+    --text-color-1: #333;
+    --text-color-3: #999;
+    --font-family: 'Lato-Regular', 'ProximaNova', 'sans-serif';
+}
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    font-size: 62.5%;
+}
+
+body {
+    font-family: var(--font-family);
+    font-size: 1.6rem;
+    line-height: 1.5;
+    text-rendering: optimizespeed;
+    color: var(--text-color);
+    overflow-y: overlay;
+}
+
+button,
+input,
+textarea,
+select {
+    outline: none;
+    border: none;
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+ul li {
+    list-style-type: none;
+}
+
+@media only screen and (max-width: 740px) {
+    [data-tippy-root] {
+        width: 98%;
+    }
+}
