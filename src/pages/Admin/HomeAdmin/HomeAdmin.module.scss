@@ -169,6 +169,7 @@
     background-color: red;
     &:hover {
         background-color: var(--text-color-1);
+        cursor: pointer;
     }
 }
 @media only screen and (max-width: 740px) {

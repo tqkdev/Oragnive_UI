@@ -2,23 +2,37 @@ import className from 'classnames/bind';
 import styles from './AdminLogin.module.scss';
 import { useState } from 'react';
 
+import { loginAdmin } from '../../../redux/Admin/adminApiRequest';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import Loader from '../../../components/Loader/Loader';
+
 const cx = className.bind(styles);
 
 function AminLogin() {
+    const [IsLoader, setIsLoader] = useState(false);
     const [admin, setAdmin] = useState('');
     const [password, setPassword] = useState('');
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+
     function handleLogin(e) {
         e.preventDefault();
+        setIsLoader(true);
         const newAdmin = {
             username: admin,
             password: password,
         };
         console.log(newAdmin);
+        loginAdmin(newAdmin, dispatch, navigate).finally(() => {
+            setIsLoader(false);
+        });
     }
 
     return (
         <div className={cx('wrapper')}>
+            {IsLoader && <Loader />}
             <div className={cx('bg-about-us')}>
                 <h1 className={cx('title')}> ADMIN LOGIN</h1>
             </div>

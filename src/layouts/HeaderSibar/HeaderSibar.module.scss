@@ -3,6 +3,7 @@
     // background-color: var(--background);
     background-color: #e4e4e4;
     overflow: hidden;
+    position: relative;
 }
 .container {
     display: flex;
@@ -23,6 +24,7 @@
     border-top-right-radius: 20px;
     border-bottom-right-radius: 20px;
     flex: 1;
+    position: relative;
 }
 
 @media only screen and (max-width: 740px) {

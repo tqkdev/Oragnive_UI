@@ -1,14 +1,21 @@
 import className from 'classnames/bind';
 import styles from './Update.module.scss';
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
 import * as request from '../../../utils/request';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faHouse, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { updateSuccess } from '../../../redux/Admin/productSlice';
+import { createAxiosAdmin } from '../../../components/axiosJWT/axiosJWT';
+import { updateProduct } from '../../../redux/Admin/adminApiRequest';
+
 const cx = className.bind(styles);
 
 function Update() {
+    const isAdmin = useSelector((state) => state.admin.login.currentAdmin);
+
     const [productDetail, setDroductDetail] = useState([]);
     const params = useParams();
 
@@ -43,6 +50,10 @@ function Update() {
     const [nguonGoc, setNguonGoc] = useState('');
     const [slug, setSlug] = useState('');
 
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    let axiosJWT = createAxiosAdmin(isAdmin, dispatch, updateSuccess);
+
     function handleUpdate(e) {
         e.preventDefault();
         const newProduct = {
@@ -56,7 +67,7 @@ function Update() {
             slug: slug === '' ? slugDefault : slug,
         };
 
-        console.log(newProduct);
+        updateProduct(params.slug, dispatch, navigate, isAdmin.accessToken, newProduct, axiosJWT);
     }
 
     return (
