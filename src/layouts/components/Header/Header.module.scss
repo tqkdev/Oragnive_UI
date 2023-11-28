@@ -1,0 +1,382 @@
+.wrapper {
+    transition: background-color 0.3s ease;
+    position: fixed;
+    width: 100%;
+    height: 65px;
+    line-height: 65px;
+    z-index: 2;
+}
+.transparentBackground {
+    background-color: transparent;
+    height: 65px;
+}
+
+.replaceBackground {
+    background-color: rgba(34, 34, 34, 0.9);
+}
+
+.inner {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+}
+.logo-left {
+    position: relative;
+    height: 65px;
+    width: 120px;
+    img {
+        transition: width 0.5s ease;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        margin: auto;
+        position: absolute;
+        width: 70%;
+    }
+}
+
+.nav-center {
+    .nav-link {
+        color: var(--white);
+        font-size: 1.8rem;
+        margin-right: 20px;
+
+        &:hover {
+            color: #5c8226;
+        }
+    }
+}
+
+.action {
+    display: flex;
+    background-color: transparent;
+    position: relative;
+    padding: 15px 0;
+}
+
+.icon-cart {
+    width: 20px;
+    margin-right: 25px;
+    cursor: pointer;
+    background-color: transparent;
+
+    img {
+        width: 100%;
+        object-fit: contain;
+    }
+}
+
+.dangnhap {
+    margin-right: 5px;
+    padding: 10px 25px;
+    border-radius: 4px;
+    line-height: 15px;
+    background-color: #81b03f;
+    font-size: 1.6rem;
+    color: #fff;
+
+    &:hover {
+        background-color: #5c8226;
+    }
+}
+.container-avatar {
+    position: relative;
+    height: 30px;
+    line-height: 50px;
+    margin-right: 40px;
+}
+.avatar {
+    width: 30px;
+    height: 30px;
+    margin-right: 20px;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        object-fit: cover;
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.setting {
+    position: absolute;
+    right: 25px;
+    min-width: 150px;
+    background-color: #fff;
+    color: var(--text-color-1);
+    font-weight: 400;
+    border-radius: 5px;
+    box-shadow: 10px 0px 20px 20px rgba(0, 0, 0, 0.12);
+    padding: 5px 0px;
+    animation: appear 0.4s linear;
+}
+
+@keyframes appear {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+.setting-option {
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+    &:hover {
+        cursor: pointer;
+        background-color: #dddddd;
+    }
+}
+.option-icon {
+    height: 40px;
+    width: 18px;
+    margin-left: 10px;
+}
+.option-title {
+    margin-left: 10px;
+}
+
+.result-cart {
+    border-radius: 5px;
+    position: absolute;
+    background-color: #fff;
+    line-height: normal;
+    right: 100px;
+    min-width: 375px;
+    top: 60px;
+    padding: 5px;
+    z-index: 1000;
+    animation: appear 0.4s linear;
+    box-shadow: 10px 0px 20px 20px rgba(0, 0, 0, 0.12);
+
+    &::after {
+        content: '';
+        border-width: 8px 10px;
+        border-style: solid;
+        border-color: transparent transparent #fff transparent;
+        // background-color: #dc0303;
+        position: absolute;
+        top: -16px;
+        right: 20px;
+    }
+}
+.cart-title {
+    padding: 5px 10px;
+    font-size: 1.8rem;
+}
+
+.item-cart {
+    display: flex;
+    padding: 5px;
+    border: 1px transparent solid;
+
+    width: 100%;
+
+    &:hover {
+        cursor: pointer;
+        background-color: #efefef;
+        border: 1px #5c8226 solid;
+    }
+}
+
+.img-cart {
+    width: 60px;
+    height: 60px;
+
+    img {
+        width: 100%;
+        object-fit: cover;
+    }
+}
+
+.info-cart {
+    margin: 3px 10px 0px;
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+}
+.info-name {
+    margin-top: 8px;
+    h3 {
+        font-size: 1.6rem;
+        font-weight: 500;
+    }
+    h4 {
+        margin-top: 5px;
+        font-size: 1.4rem;
+        color: red;
+    }
+}
+
+.info-quality {
+    display: flex;
+    line-height: 57px;
+
+    h4 {
+        font-size: 1.8rem;
+        margin-left: 30px;
+        color: red;
+    }
+}
+.quality {
+    display: flex;
+
+    h5 {
+        margin-top: 3px;
+        font-size: 0.8rem;
+        font-weight: 500;
+    }
+}
+.total_oneSP {
+    line-height: 57px;
+    h3 {
+        font-size: 1.8rem;
+    }
+}
+
+.icon-delete {
+    width: 30px;
+    font-size: 2rem;
+    text-align: center;
+    line-height: 60px;
+
+    svg path {
+        color: #999999;
+    }
+
+    &:hover {
+        svg path {
+            color: #dc0303;
+        }
+    }
+}
+
+.chitiet {
+    margin-top: 10px;
+    text-align: center;
+
+    a {
+        &:hover {
+            color: red;
+        }
+    }
+}
+.thanhtoan {
+    padding: 5px;
+    margin-top: 10px;
+    display: flex;
+    height: 40px;
+    line-height: 40px;
+}
+.total-rice {
+    flex: 1;
+    display: flex;
+    h5 {
+        padding-top: 4px;
+    }
+
+    h4 {
+        color: red;
+        font-size: 2rem;
+        margin-left: 10px;
+        padding-top: 2px;
+    }
+}
+.btn-thanhtoan {
+    width: 100px;
+    line-height: 30px;
+    text-align: center;
+    border-radius: 3px;
+    background-color: red;
+    color: #fff;
+    font-weight: 600;
+
+    &:hover {
+        background-color: #dc0303;
+    }
+}
+
+// bars tablet vs mobile
+.icon-bars {
+    // display: none;
+    font-size: 2.2rem;
+    width: 20px;
+    line-height: 35px;
+
+    svg path {
+        color: #fff;
+    }
+}
+.icon-Xmark {
+    display: none;
+    font-size: 2.4rem;
+    width: 20px;
+    line-height: 35px;
+
+    svg path {
+        color: #fff;
+    }
+}
+
+// mobile width < 740px
+@media only screen and (max-width: 740px) {
+    .wrapper {
+        background-color: rgba(34, 34, 34, 0.9);
+    }
+    .icon-bars {
+        display: block;
+        margin: 0 5px;
+        padding: 0 5px;
+    }
+    .nav-center {
+        position: absolute;
+        top: 65px;
+        width: 100%;
+        background-color: var(--border);
+        animation: tabletsearchSideIn 0.4s linear;
+    }
+    .nav-link {
+        display: block;
+        margin: 0 20px;
+    }
+    .container-avatar {
+        margin-right: 0;
+    }
+    .result-cart {
+        right: 0;
+        min-width: 300px;
+        &::after {
+            display: none;
+        }
+    }
+    .action {
+        margin-right: 10px;
+    }
+    .icon-Xmark {
+        display: block;
+        margin: 0 5px;
+        padding: 0 5px;
+    }
+
+    @keyframes tabletsearchSideIn {
+        from {
+            // opacity: 0;
+            top: -65px;
+        }
+        to {
+            // opacity: 1;
+            top: 65px;
+        }
+    }
+}
+
+// tablet width >= 740px and width < 1024px
+@media only screen and (min-width: 741px) and (max-width: 1024px) {
+}

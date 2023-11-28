@@ -1,5 +1,5 @@
 // eslint-disable-next-line react/prop-types
-function OnlyContent({ children }) {
+function ContentOnly({ children }) {
     return (
         <div>
             <div>{children}</div>
@@ -7,4 +7,4 @@ function OnlyContent({ children }) {
     );
 }
 
-export default OnlyContent;
+export default ContentOnly;

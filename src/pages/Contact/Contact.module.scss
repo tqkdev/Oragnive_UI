@@ -1,0 +1,175 @@
+.bg-header {
+    height: 65px;
+    width: 100%;
+    background-color: rgba(34, 34, 34, 0.9);
+}
+.bg-about-us {
+    z-index: 0;
+    width: 100%;
+    height: 175px;
+    background-image: url('https://res.cloudinary.com/dyoctwffi/image/upload/v1691762303/ORGAVIVE/slide_rommpf.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        z-index: 2;
+        display: block;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: #000;
+        opacity: 0.3;
+    }
+}
+.title {
+    z-index: 3;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    font-size: 6rem;
+}
+.txt-center {
+    text-align: center;
+    position: relative;
+    padding-bottom: 90px;
+
+    p {
+        top: 25px;
+        font-size: 2rem;
+        font-weight: 400;
+        position: absolute;
+        z-index: 10;
+        color: var(--border);
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    h1 {
+        font-size: 4.2rem;
+        line-height: 0.5;
+    }
+}
+///
+.container {
+    display: flex;
+    justify-content: center;
+}
+.inner {
+    width: 1200px;
+    padding: 100px 0;
+}
+.txt-center {
+    text-align: center;
+    position: relative;
+    padding-bottom: 90px;
+
+    p {
+        top: 25px;
+        font-size: 2rem;
+        font-weight: 400;
+        position: absolute;
+        color: var(--border);
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    h1 {
+        font-size: 4.2rem;
+        line-height: 0.5;
+    }
+}
+///
+.message {
+    display: flex;
+    justify-content: center;
+}
+.form {
+    width: 50%;
+}
+.row {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.col {
+    width: 46%;
+    margin: 10px;
+    border: 1px #e6e6e6 solid;
+
+    input {
+        font-size: 1.5rem;
+        line-height: 1.5;
+        height: 47px;
+        padding: 0 20px;
+        color: #666;
+        width: 100%;
+
+        &:focus-visible {
+            border: 1px var(--border) solid;
+        }
+    }
+}
+.col2 {
+    width: 100%;
+    margin: 10px;
+    border: 1px #e6e6e6 solid;
+
+    textarea {
+        width: 100%;
+        min-height: 206px;
+        border: none;
+        padding: 20px;
+        color: #666;
+        font-size: 1.5rem;
+
+        &:focus-visible {
+            border: 1px var(--border) solid;
+        }
+    }
+}
+.send-mess {
+    min-width: 152px;
+    margin: 30px 0 0 10px;
+    height: 40px;
+    font-size: 1.4rem;
+    line-height: 40px;
+    text-transform: uppercase;
+    color: #fff;
+    background-color: #81b03f;
+
+    &:hover {
+        background-color: #333;
+        border-color: #333;
+        cursor: pointer;
+    }
+}
+
+@media only screen and (max-width: 740px) {
+    .form {
+        width: 100%;
+    }
+    .col {
+        width: 100%;
+    }
+    .txt-center {
+        h1 {
+            font-size: 2.5rem;
+        }
+    }
+}
+
+@media only screen and (min-width: 741px) and (max-width: 1024px) {
+    .form {
+        width: 100%;
+    }
+    .row {
+        justify-content: space-between;
+    }
+}

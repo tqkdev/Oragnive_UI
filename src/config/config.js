@@ -10,7 +10,6 @@ const routes = {
     contact: '/contact',
     detail: '/detail/:slug',
     cart: '/cart',
-    checkout: '/checkout',
     login: '/login',
     register: '/register',
     search: '/search/:q',

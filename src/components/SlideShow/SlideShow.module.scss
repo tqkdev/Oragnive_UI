@@ -1,0 +1,144 @@
+.item-slick-container {
+    width: 280px;
+    padding: 10px;
+}
+.item-slick {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 355px;
+    transition: all 0.4s;
+    border: 1px #f1ede0 solid;
+
+    .item-product-img {
+        object-fit: cover;
+        width: 100%;
+    }
+
+    &:hover {
+        border: 1px var(--border) solid;
+        cursor: pointer;
+        box-shadow: 0 0 13px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    &:hover .icon-cart-slick {
+        transition: all 0.4s;
+        transform: scale(1);
+        opacity: 1;
+    }
+
+    &:hover .price-slick {
+        transition: all 0.4s;
+        transform: scale(0);
+        opacity: 0;
+    }
+}
+.info-slick {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    width: 100%;
+    height: 110px;
+    bottom: 0px;
+
+    .name-slick {
+        padding: 5px;
+        color: #333;
+        font-size: 2rem;
+        font-weight: 600;
+        transition: all 0.8s;
+
+        &:hover {
+            color: var(--border);
+        }
+    }
+
+    .price-slick {
+        font-size: 1.8rem;
+        color: var(--text-color-3);
+        position: absolute;
+        left: 38%;
+        top: 50px;
+        height: 38px;
+        opacity: 1;
+        transform: scale(1);
+        transition: all 0.4s;
+    }
+
+    .icon-cart-slick {
+        top: 50px;
+        width: 38px;
+        height: 38px;
+        line-height: 45px;
+        position: absolute;
+        left: 43%;
+        border-radius: 50%;
+        background-color: #bfd79d;
+        opacity: 0;
+        transform: scale(0);
+        transition: all 0.4s;
+
+        .img {
+            width: 20px;
+            object-fit: cover;
+            display: inline;
+        }
+
+        &:hover {
+            background-color: var(--border);
+            transition: all 0.8s;
+        }
+    }
+}
+
+//arrows slick react
+
+.custom-prev-arrow,
+.custom-next-arrow {
+    margin-top: -36px;
+    position: absolute;
+    z-index: 5;
+    width: 20px;
+    height: 26px;
+    line-height: 26px;
+    cursor: pointer;
+
+    svg {
+        width: 100%;
+        height: 100%;
+    }
+    path {
+        color: #8a8a8a;
+    }
+
+    &:hover svg path {
+        color: #408bea;
+    }
+}
+
+.custom-prev-arrow {
+    top: 0;
+    right: 40px;
+}
+
+.custom-next-arrow {
+    top: 0;
+    right: 10px;
+}
+
+// mobile width < 740px
+@media only screen and (max-width: 740px) {
+    .custom-prev-arrow,
+    .custom-next-arrow {
+        width: 40px;
+        border: 1px solid #333;
+    }
+    .custom-next-arrow {
+        top: 12px;
+    }
+    .custom-prev-arrow {
+        right: 55px;
+        top: 12px;
+    }
+}

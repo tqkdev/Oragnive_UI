@@ -46,8 +46,6 @@ ul li {
     list-style-type: none;
 }
 
-@media only screen and (max-width: 740px) {
-    [data-tippy-root] {
-        width: 98%;
-    }
+[data-tippy-root] {
+    width: 100%;
 }

@@ -1,0 +1,355 @@
+.bg-header {
+    height: 65px;
+    width: 100%;
+    background-color: rgba(34, 34, 34, 0.9);
+}
+.bg-about-us {
+    width: 100%;
+    height: 215px;
+    background-image: url('https://res.cloudinary.com/dyoctwffi/image/upload/v1691762303/ORGAVIVE/slide_rommpf.jpg');
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    position: relative;
+
+    &::after {
+        content: '';
+        position: absolute;
+        z-index: 0;
+        display: block;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        background-color: #000;
+        opacity: 0.3;
+    }
+}
+.title {
+    z-index: 1;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #fff;
+    font-size: 6rem;
+}
+.txt-center {
+    text-align: center;
+    position: relative;
+    padding-bottom: 90px;
+
+    p {
+        top: 25px;
+        font-size: 2rem;
+        font-weight: 400;
+        position: absolute;
+        z-index: 10;
+        color: var(--border);
+        left: 50%;
+        transform: translateX(-50%);
+    }
+    h1 {
+        font-size: 4.2rem;
+        line-height: 0.5;
+    }
+}
+
+////////
+.main {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: #f2f2f2;
+}
+.inner {
+    width: 1200px;
+}
+.back {
+    display: block;
+    margin: 15px 10px 5px;
+    color: var(--text-color-3);
+
+    .icon-back {
+        margin-right: 10px;
+    }
+
+    &:hover {
+        color: var(--border);
+    }
+}
+.giohangtrong {
+    width: 38.85%;
+    font-size: 2rem;
+    color: var(--text-color-2);
+    line-height: 1.5;
+    padding: 8px;
+}
+.container {
+    display: flex;
+    width: 100%;
+    padding: 10px;
+}
+.product {
+    width: 67%;
+    background-color: #fff;
+    margin-right: 8px;
+    border-radius: 5px;
+}
+.header {
+    width: 100%;
+    display: flex;
+    padding: 20px 10px;
+}
+.col1 {
+    width: 38.85%;
+    font-size: 2rem;
+    color: var(--text-color-2);
+    line-height: 1.5;
+    padding: 8px 0;
+}
+.col {
+    width: 15.2875%;
+    font-size: 2rem;
+    color: var(--text-color-2);
+    line-height: 1.5;
+    padding: 8px 0;
+    text-align: center;
+}
+.border {
+    width: 96%;
+    border-bottom: 1px var(--text-color-3) solid;
+    margin: 0 15px;
+}
+.item-cart {
+    width: 100%;
+    display: flex;
+}
+
+.info-cart {
+    display: flex;
+
+    .img-cart {
+        width: 64px;
+        height: 64px;
+        padding: 10px;
+        img {
+            width: 100%;
+            object-fit: cover;
+            border: 1px var(--border) solid;
+        }
+    }
+    .name {
+        flex: 1;
+        font-size: 1.4rem;
+        line-height: 20px;
+        color: var(--text-color-2);
+        margin: 20px 10px 10px 10px;
+    }
+}
+.price,
+.total-price {
+    font-size: 1.6rem;
+    line-height: 20px;
+    font-weight: 700;
+    padding-top: 30px;
+}
+.price {
+    color: var(--text-color-1);
+}
+.total-price {
+    color: #be1e2d;
+}
+.icon-delete {
+    padding: 20px;
+
+    &:hover {
+        color: #be1e2d;
+        cursor: pointer;
+    }
+}
+//
+.pay {
+    flex: 1;
+    background-color: #fff;
+    margin-left: 8px;
+    border-radius: 5px;
+    height: 100%;
+    padding: 10px;
+}
+.tamtinh {
+    font-weight: 700;
+    font-size: 2.2rem;
+    line-height: 30px;
+    padding: 0 10px;
+
+    .icon-coins {
+        color: var(--border);
+        margin-right: 10px;
+    }
+}
+.border-pay {
+    width: 92%;
+    border-bottom: 1px var(--text-color-3) solid;
+    margin: 0 15px;
+}
+.total {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+
+    .total-txt {
+        font-size: 1.6rem;
+        line-height: 20px;
+        color: var(--text-color-1);
+    }
+    .total-number {
+        font-size: 1.6rem;
+        line-height: 20px;
+        color: #be1e2d;
+        font-weight: 600;
+    }
+}
+.dathang {
+    margin: 10px 0;
+
+    .btn-dathang {
+        width: 100%;
+        height: 38px;
+        background-color: var(--border);
+        border-radius: 4px;
+        color: #fff;
+        font-size: 1.6rem;
+        font-weight: 600;
+        transition: all 0.4s;
+
+        &:hover {
+            background-color: var(--text-color-1);
+            cursor: pointer;
+        }
+    }
+}
+
+/// couter
+
+.numer-product {
+    width: 120px;
+    display: flex;
+    line-height: 40px;
+    padding: 25px 15px 15px 15px;
+}
+.counter-product {
+    height: 30px;
+    display: flex;
+}
+
+.quantity {
+    width: 30px;
+    height: 30px;
+    background-color: transparent;
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: 600;
+    line-height: 30px;
+    border-bottom: 1px solid #9b9b9b;
+    border-top: 1px solid #9b9b9b;
+
+    &:hover {
+        cursor: not-allowed;
+    }
+}
+.btn-decrease,
+.btn-increase {
+    width: 30px;
+    height: 30px;
+    border: 1px solid #9b9b9b;
+    background-color: transparent;
+    font-size: 1.8rem;
+    color: var(--text-color-3);
+    transition: all 0.4s;
+
+    &:hover {
+        background-color: var(--border);
+        border: var(--border);
+        cursor: pointer;
+        color: #fff;
+    }
+}
+
+// mobile width < 740px
+@media only screen and (max-width: 450px) {
+    .numer-product {
+        width: 80px;
+        padding: 20px 3px 0px 2px;
+    }
+}
+
+// mobile width < 740px
+@media only screen and (max-width: 740px) {
+    .inner {
+        width: 100%;
+    }
+    .container {
+        display: block;
+    }
+    .product {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .colthanhtien,
+    .total-price {
+        display: none;
+    }
+
+    .pay {
+        margin: 10px 0 0 0;
+    }
+
+    // couter
+    .numer-product {
+        width: 105px;
+        padding: 20px 15px 0px 15px;
+    }
+    .quantity,
+    .btn-decrease,
+    .btn-increase {
+        width: 25px;
+        height: 25px;
+        line-height: 25px;
+    }
+}
+
+// tablet width >= 740px and width < 1024px
+@media only screen and (min-width: 741px) and (max-width: 1024px) {
+    .container {
+        display: block;
+    }
+    .product {
+        width: 100%;
+    }
+}
+
+// mobile width < 740px
+@media only screen and (max-width: 450px) {
+    .col {
+        width: 24%;
+        font-size: 1.4rem;
+    }
+    .col1 {
+        width: 35%;
+        font-size: 1.6rem;
+    }
+    .info-cart {
+        .name {
+            margin: 0;
+        }
+    }
+    .repon {
+        width: 10%;
+    }
+    .icon-delete {
+        padding: 20px 5px;
+    }
+}
