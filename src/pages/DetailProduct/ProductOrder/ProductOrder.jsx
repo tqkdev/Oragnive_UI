@@ -2,12 +2,25 @@ import { useState } from 'react';
 import className from 'classnames/bind';
 import styles from './ProductOrder.module.scss';
 
+import { createAxiosUser } from '../../../components/axiosJWT/axiosJWT';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateOrder } from '../../../redux/User/userApiRequest';
+import { updateOderSuccess } from '../../../redux/User/OrderSlice';
+
 const cx = className.bind(styles);
 
 // eslint-disable-next-line react/prop-types
-function ProductOrder({ handleShowSwal }) {
-    const [quantity, setQuantity] = useState('1');
+function ProductOrder({ handleShowSwal, productDetail }) {
+    const isUser = useSelector((state) => state.user.login.currentUser);
 
+    const [quantity, setQuantity] = useState('1');
+    const dispatch = useDispatch();
+
+    const toLogin = () => {
+        window.location.href = '/login';
+    };
+
+    // sử lý chỉ cho nhập số
     const handleQuantityChange = (event) => {
         const newQuantity = parseInt(event.target.value);
         if (!isNaN(newQuantity)) {
@@ -17,10 +30,12 @@ function ProductOrder({ handleShowSwal }) {
         }
     };
 
+    // xử lý tăng
     const increaseQuantity = () => {
         setQuantity(quantity === '1' ? 2 : quantity + 1);
     };
 
+    // xử lý giảm
     const decreaseQuantity = () => {
         if (quantity > 1) {
             setQuantity(quantity - 1);
@@ -29,9 +44,26 @@ function ProductOrder({ handleShowSwal }) {
         }
     };
 
+    // thêm sản phẩm vào giỏ hàng
+    let axiosOrder = createAxiosUser(isUser, dispatch, updateOderSuccess);
+    const handleAddOrder = (product) => {
+        const newProductOrder = {
+            product_id: product._id,
+            product_name: product.name,
+            product_image: product.image_url,
+            product_price: product.price,
+            product_slug: product.slug,
+            quality: Number(quantity),
+        };
+        dispatch(updateOrder(isUser?._id, isUser?.accessToken, newProductOrder, axiosOrder));
+    };
     const handleAddToCart = () => {
-        // Thực hiện các xử lý liên quan đến thêm sản phẩm vào giỏ hàng tại đây
-        handleShowSwal(); // Gọi hàm handleShowSwal để hiển thị thông báo
+        if (isUser) {
+            handleAddOrder(productDetail);
+            handleShowSwal();
+        } else {
+            toLogin();
+        }
     };
 
     return (

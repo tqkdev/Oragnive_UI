@@ -7,6 +7,11 @@ import { faCaretDown, faCheck } from '@fortawesome/free-solid-svg-icons';
 import * as request from '../../utils/request';
 import Search from './Search/Search';
 
+import { createAxiosUser } from '../../components/axiosJWT/axiosJWT';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateOrder } from '../../redux/User/userApiRequest';
+import { updateOderSuccess } from '../../redux/User/OrderSlice';
+
 const cx = className.bind(styles);
 
 function About() {
@@ -17,6 +22,10 @@ function About() {
     const [isswal, setIsswal] = useState(false);
     const [activeFilter, setActiveFilter] = useState('all');
     const [products, setProducts] = useState([]);
+
+    const toLogin = () => {
+        window.location.href = '/login';
+    };
 
     // chọn cách sắp xếp
     const handleValueSort = (value) => {
@@ -55,7 +64,11 @@ function About() {
 
     // success add product
     const handleShowSwal = () => {
-        setIsswal(!isswal);
+        if (isUser) {
+            setIsswal(!isswal);
+        } else {
+            toLogin();
+        }
     };
 
     // get data mặc định all
@@ -93,6 +106,25 @@ function About() {
     };
     const handleFilterClick = (filter) => {
         setActiveFilter(filter);
+    };
+
+    // thêm sản phẩm vào giỏ hàng
+    const isUser = useSelector((state) => state.user.login.currentUser);
+    const dispatch = useDispatch();
+    let axiosOrder = createAxiosUser(isUser, dispatch, updateOderSuccess);
+
+    const handleAddOrder = (product) => {
+        const newProductOrder = {
+            product_id: product._id,
+            product_name: product.name,
+            product_image: product.image_url,
+            product_price: product.price,
+            product_slug: product.slug,
+            quality: 1,
+        };
+        if (isUser) {
+            dispatch(updateOrder(isUser?._id, isUser?.accessToken, newProductOrder, axiosOrder));
+        }
     };
 
     return (
@@ -273,6 +305,7 @@ function About() {
                                             <p className={cx('description-item')}>{product.description}</p>
                                             <button
                                                 onClick={() => {
+                                                    handleAddOrder(product);
                                                     handleShowSwal();
                                                 }}
                                                 className={cx('btn-addtocart')}
@@ -302,6 +335,7 @@ function About() {
                                                 <div className={cx('icon-cart-grid')}>
                                                     <img
                                                         onClick={() => {
+                                                            handleAddOrder(product);
                                                             handleShowSwal();
                                                         }}
                                                         className={cx('img')}
@@ -331,8 +365,7 @@ function About() {
                                 </div>
                             </div>
                         </div>
-                        <h5 className={cx('swal-title')}>Name product</h5>
-                        <p className={cx('swal-text')}>is added to cart !</p>
+                        <h5 className={cx('swal-title')}>Đã thêm sản phẩm vào giỏ hàng!</h5>
                         <div className={cx('swal-footer')}>
                             <button onClick={handleShowSwal} className={cx('btn-oke')}>
                                 OK

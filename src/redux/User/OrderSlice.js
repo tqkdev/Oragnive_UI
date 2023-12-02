@@ -7,7 +7,7 @@ const productSlice = createSlice({
             isFetching: false,
             error: false,
             success: false,
-            order: null,
+            order: [],
         },
     },
     reducers: {

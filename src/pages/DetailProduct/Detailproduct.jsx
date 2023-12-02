@@ -18,17 +18,21 @@ function Detailproduct() {
     const [showReview, setShowReview] = useState(false);
     const [isswal, setIsswal] = useState(false);
 
+    // hiện mô tả
     const handleDescriptionClick = () => {
         setShowDescription(true);
         setShowInformation(false);
         setShowReview(false);
     };
 
+    // hiện thông tin sản phẩm
     const handleInformationClick = () => {
         setShowDescription(false);
         setShowInformation(true);
         setShowReview(false);
     };
+
+    // hiện đánh giá
     const handleReviewClick = () => {
         setShowDescription(false);
         setShowInformation(false);
@@ -42,6 +46,7 @@ function Detailproduct() {
     const [productSlide, setProductSlide] = useState([]);
     const [productDetail, setDroductDetail] = useState([]);
 
+    // lấy slide sản phẩm
     useEffect(() => {
         const fetchApi = async () => {
             try {
@@ -55,6 +60,7 @@ function Detailproduct() {
         fetchApi();
     }, []);
 
+    // lấy chi tiết sản phẩm
     const params = useParams();
     useEffect(() => {
         const fetchApi = async () => {
@@ -180,8 +186,7 @@ function Detailproduct() {
                                 </div>
                             </div>
                         </div>
-                        <h5 className={cx('swal-title')}>{productDetail.name}</h5>
-                        <p className={cx('swal-text')}>Đã thêm vào giỏ hàng !</p>
+                        <h5 className={cx('swal-title')}>Đã thêm sản phẩm vào giỏ hàng!</h5>
                         <div className={cx('swal-footer')}>
                             <button onClick={handleShowSwal} className={cx('btn-oke')}>
                                 OK

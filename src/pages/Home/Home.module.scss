@@ -150,6 +150,7 @@
     flex-wrap: wrap;
     padding: 0 10px;
     // justify-content: center;
+    position: relative;
 }
 .item-product {
     position: relative;
@@ -408,12 +409,7 @@
     line-height: 1.5;
     margin-bottom: 13px;
 }
-.swal-text {
-    color: #555;
-    font-size: 1.6rem;
-    line-height: 1.666667;
-    text-align: center;
-}
+
 .swal-footer {
     text-align: right;
     padding-top: 13px;

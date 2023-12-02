@@ -24,7 +24,6 @@ function AminLogin() {
             username: admin,
             password: password,
         };
-        console.log(newAdmin);
         loginAdmin(newAdmin, dispatch, navigate).finally(() => {
             setIsLoader(false);
         });

@@ -8,9 +8,14 @@ import styles from './SlideShow.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 
+import { createAxiosUser } from '../axiosJWT/axiosJWT';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateOrder } from '../../redux/User/userApiRequest';
+import { updateOderSuccess } from '../../redux/User/OrderSlice';
 const cx = className.bind(styles);
 
 const CustomPrevArrow = (props) => (
+    //custom slide
     // eslint-disable-next-line react/prop-types
     <div className={cx('custom-prev-arrow')} onClick={props.onClick}>
         <FontAwesomeIcon icon={faCaretLeft} />
@@ -65,6 +70,33 @@ const Slideshow = ({ productSlide, handleShowSwal }) => {
         nextArrow: <CustomNextArrow />,
     };
 
+    // redux thêm sản phẩm vào giỏ hàng
+    const isUser = useSelector((state) => state.user.login.currentUser);
+    const dispatch = useDispatch();
+    let axiosOrder = createAxiosUser(isUser, dispatch, updateOderSuccess);
+
+    const toLogin = () => {
+        window.location.href = '/login';
+    };
+
+    const handleAddOrder = (product) => {
+        const newProductOrder = {
+            product_id: product._id,
+            product_name: product.name,
+            product_image: product.image_url,
+            product_price: product.price,
+            product_slug: product.slug,
+            quality: 1,
+        };
+
+        if (isUser) {
+            dispatch(updateOrder(isUser?._id, isUser?.accessToken, newProductOrder, axiosOrder));
+            handleShowSwal();
+        } else {
+            toLogin();
+        }
+    };
+
     return (
         <div ref={slideshowRef}>
             <Slider {...settings}>
@@ -81,7 +113,7 @@ const Slideshow = ({ productSlide, handleShowSwal }) => {
                                 <div className={cx('icon-cart-slick')}>
                                     <img
                                         onClick={() => {
-                                            handleShowSwal();
+                                            handleAddOrder(product);
                                         }}
                                         className={cx('img')}
                                         src="https://res.cloudinary.com/dyoctwffi/image/upload/v1689779884/ORGAVIVE/icons/icon-cart_x3j1qo.png"

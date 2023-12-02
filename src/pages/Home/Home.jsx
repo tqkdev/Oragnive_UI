@@ -5,16 +5,33 @@ import { useState, useEffect } from 'react';
 import * as request from '../../utils/request';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import Loader from '../../components/Loader/Loader';
+
+import { createAxiosUser } from '../../components/axiosJWT/axiosJWT';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateOrder } from '../../redux/User/userApiRequest';
+import { updateOderSuccess } from '../../redux/User/OrderSlice';
 
 const cx = className.bind(styles);
 
 function Home() {
+    const isUser = useSelector((state) => state.user.login.currentUser);
+
     const [activeFilter, setActiveFilter] = useState('all');
     const [products, setProducts] = useState([]);
     const [isswal, setIsswal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+
+    const toLogin = () => {
+        window.location.href = '/login';
+    };
 
     const handleShowSwal = () => {
-        setIsswal(!isswal);
+        if (isUser) {
+            setIsswal(!isswal);
+        } else {
+            toLogin();
+        }
     };
 
     useEffect(() => {
@@ -43,17 +60,35 @@ function Home() {
                 category = 'trai-cay';
             }
             try {
+                setIsLoading(true);
                 const res = await request.get(`category/${category}`);
                 setProducts(res.id_product);
-                // console.log(res.id_product);
+                setIsLoading(false);
             } catch (error) {
                 console.log('error');
             }
         }
     };
-
     const handleFilterClick = (filter) => {
         setActiveFilter(filter);
+    };
+
+    // Thêm sản phẩm vào giỏ hàng
+    const dispatch = useDispatch();
+    let axiosOrder = createAxiosUser(isUser, dispatch, updateOderSuccess);
+
+    const handleAddOrder = (product) => {
+        const newProductOrder = {
+            product_id: product._id,
+            product_name: product.name,
+            product_image: product.image_url,
+            product_price: product.price,
+            product_slug: product.slug,
+            quality: 1,
+        };
+        if (isUser) {
+            dispatch(updateOrder(isUser?._id, isUser?.accessToken, newProductOrder, axiosOrder));
+        }
     };
 
     return (
@@ -136,6 +171,7 @@ function Home() {
                         </button>
                     </div>
                     <div className={cx('grid-product')}>
+                        {isLoading && <Loader />}
                         {products.map((product) => (
                             <div key={product._id} className={cx('item-product')}>
                                 <img className={cx('item-product-img')} src={product.image_url} alt={product.name} />
@@ -146,6 +182,7 @@ function Home() {
                                     <h4 className={cx('price-product')}>{product.price}đ</h4>
                                     <div
                                         onClick={() => {
+                                            handleAddOrder(product);
                                             handleShowSwal();
                                         }}
                                         className={cx('icon-cart-product')}
@@ -252,8 +289,7 @@ function Home() {
                                 </div>
                             </div>
                         </div>
-                        <h5 className={cx('swal-title')}>Name product</h5>
-                        <p className={cx('swal-text')}>is added to cart !</p>
+                        <h5 className={cx('swal-title')}>Đã thêm sản phẩm vào giỏ hàng</h5>
                         <div className={cx('swal-footer')}>
                             <button onClick={handleShowSwal} className={cx('btn-oke')}>
                                 OK
