@@ -13,6 +13,7 @@ const routes = {
     login: '/login',
     register: '/register',
     search: '/search/:q',
+    notfound: '*',
 };
 
 export default routes;

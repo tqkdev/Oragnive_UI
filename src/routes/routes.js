@@ -19,6 +19,7 @@ import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 import Cart from '../pages/Cart/Cart';
 import Search from '../pages/Search/Search';
+import NotFound from '../pages/NotFound/NotFound';
 
 // Public routes
 const publicRoutes = [
@@ -36,6 +37,7 @@ const publicRoutes = [
     { path: config.routes.register, component: Register, layout: ContentOnly },
     { path: config.routes.cart, component: Cart },
     { path: config.routes.search, component: Search },
+    { path: config.routes.notfound, component: NotFound, layout: ContentOnly },
 ];
 const privateRoutes = [];
 export { publicRoutes, privateRoutes };
