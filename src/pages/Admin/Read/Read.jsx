@@ -16,7 +16,7 @@ function Read() {
         const fetchApi = async () => {
             try {
                 const res = await request.get(`product/${params.slug}`);
-                setDroductDetail(res);
+                setDroductDetail(res.data);
             } catch (error) {
                 console.log(error);
             }
@@ -87,7 +87,7 @@ function Read() {
                                 <div className={cx('more')}>{productDetail.slug}</div>
                             </div>
 
-                            <Link to={`/admin/main/update/${productDetail.slug}`} className={cx('btn-edit')}>
+                            <Link to={`/admin/main/update/${productDetail._id}`} className={cx('btn-edit')}>
                                 EDIT
                             </Link>
                         </form>

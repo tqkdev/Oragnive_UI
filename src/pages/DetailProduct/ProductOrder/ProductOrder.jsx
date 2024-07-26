@@ -55,7 +55,7 @@ function ProductOrder({ handleShowSwal, productDetail }) {
             product_slug: product.slug,
             quality: Number(quantity),
         };
-        dispatch(updateOrder(isUser?._id, isUser?.accessToken, newProductOrder, axiosOrder));
+        dispatch(updateOrder(isUser?.data._id, isUser?.data.accessToken, newProductOrder, axiosOrder));
     };
     const handleAddToCart = () => {
         if (isUser) {

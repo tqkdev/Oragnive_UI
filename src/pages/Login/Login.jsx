@@ -10,7 +10,7 @@ import { useDispatch } from 'react-redux';
 const cx = className.bind(styles);
 
 function Login() {
-    const [username, setUsername] = useState('');
+    const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [IsLoader, setIsLoader] = useState(false);
 
@@ -21,7 +21,7 @@ function Login() {
         e.preventDefault();
         setIsLoader(true);
         const newUser = {
-            username: username,
+            email: email,
             password: password,
         };
         loginUser(newUser, dispatch, navigate).finally(() => {
@@ -41,8 +41,8 @@ function Login() {
                         <div className={cx('login')}>
                             <form className={cx('form')}>
                                 <div className={cx('form-input')}>
-                                    <p className={cx('txt-input')}>Username or email address</p>
-                                    <input className={cx('username')} onChange={(e) => setUsername(e.target.value)} />
+                                    <p className={cx('txt-input')}>Email address</p>
+                                    <input className={cx('username')} onChange={(e) => setEmail(e.target.value)} />
                                 </div>
                                 <div className={cx('form-input')}>
                                     <p className={cx('txt-input')}>Password</p>

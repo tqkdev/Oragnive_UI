@@ -51,7 +51,8 @@ function Detailproduct() {
         const fetchApi = async () => {
             try {
                 const res = await request.get('product');
-                setProductSlide(res);
+                const productmap = res.data.products;
+                setProductSlide(productmap);
             } catch (error) {
                 console.log(error);
             }
@@ -66,7 +67,8 @@ function Detailproduct() {
         const fetchApi = async () => {
             try {
                 const res = await request.get(`product/${params.slug}`);
-                setDroductDetail(res);
+                const product = res.data;
+                setDroductDetail(product);
             } catch (error) {
                 console.log(error);
             }

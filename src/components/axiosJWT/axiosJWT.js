@@ -2,16 +2,12 @@ import jwt_decode from 'jwt-decode';
 import axios from 'axios';
 
 // admin
-const apirefreshTokenAdmin = async () => {
+const apirefreshTokenAdmin = async (adminid) => {
     try {
         const res = await axios.post(
             'http://localhost:3001/api/admin/refresh',
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            },
-            { withCredentials: true },
+            { adminid: `${adminid}` },
+            { headers: { 'Content-Type': 'application/json' }, withCredentials: true },
         );
         return res.data;
     } catch (error) {
@@ -25,40 +21,48 @@ export const createAxiosAdmin = (isCurrent, dispatch, stateSuccess) => {
     newInstance.interceptors.request.use(
         async (config) => {
             let date = new Date();
-            const decodedToken = jwt_decode(isCurrent.accessToken);
+            const decodedToken = jwt_decode(isCurrent.data.accessToken);
+
             if (decodedToken.exp < date.getTime() / 1000) {
-                const data = await apirefreshTokenAdmin();
-                const refreshAdmin = {
-                    ...isCurrent,
-                    accessToken: data.accessToken,
-                };
-                dispatch(stateSuccess(refreshAdmin));
-                config.headers['token'] = 'Bearer ' + data.accessToken;
+                try {
+                    const data = await apirefreshTokenAdmin(isCurrent.data._id);
+                    const refreshAdmin = {
+                        ...isCurrent,
+                        data: {
+                            ...isCurrent.data,
+                            accessToken: data.data.accessToken,
+                        },
+                    };
+
+                    dispatch(stateSuccess(refreshAdmin));
+                    config.headers['token'] = 'Bearer ' + data.data.accessToken;
+                } catch (error) {
+                    // Xử lý lỗi làm mới token nếu cần
+                }
+            } else {
+                config.headers['token'] = 'Bearer ' + isCurrent.data.accessToken;
             }
             return config;
         },
-        (err) => {
-            return Promise.reject(err);
-        },
+        (err) => Promise.reject(err),
     );
+
     return newInstance;
 };
 
 //  user
-const apirefreshTokenUser = async () => {
+
+const apirefreshTokenUser = async (userid) => {
     try {
         const res = await axios.post(
             'http://localhost:3001/api/user/refresh',
-            {
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            },
-            { withCredentials: true },
+            { userid: `${userid}` },
+            { headers: { 'Content-Type': 'application/json' }, withCredentials: true },
         );
-        return res.data;
+        return res.data; // Đảm bảo trả về dữ liệu đúng cách
     } catch (error) {
-        console.log(error);
+        console.error('Error refreshing token:', error);
+        throw error;
     }
 };
 
@@ -68,21 +72,31 @@ export const createAxiosUser = (isCurrent, dispatch, stateSuccess) => {
     newInstance.interceptors.request.use(
         async (config) => {
             let date = new Date();
-            const decodedToken = jwt_decode(isCurrent.accessToken);
+            const decodedToken = jwt_decode(isCurrent.data.accessToken);
+
             if (decodedToken.exp < date.getTime() / 1000) {
-                const data = await apirefreshTokenUser();
-                const refreshUser = {
-                    ...isCurrent,
-                    accessToken: data.accessToken,
-                };
-                dispatch(stateSuccess(refreshUser));
-                config.headers['token'] = 'Bearer ' + data.accessToken;
+                try {
+                    const data = await apirefreshTokenUser(isCurrent.data._id);
+                    const refreshUser = {
+                        ...isCurrent,
+                        data: {
+                            ...isCurrent.data,
+                            accessToken: data.data.accessToken,
+                        },
+                    };
+
+                    dispatch(stateSuccess(refreshUser));
+                    config.headers['token'] = 'Bearer ' + data.data.accessToken;
+                } catch (error) {
+                    // Xử lý lỗi làm mới token nếu cần
+                }
+            } else {
+                config.headers['token'] = 'Bearer ' + isCurrent.data.accessToken;
             }
             return config;
         },
-        (err) => {
-            return Promise.reject(err);
-        },
+        (err) => Promise.reject(err),
     );
+
     return newInstance;
 };

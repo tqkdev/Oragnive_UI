@@ -38,8 +38,8 @@ function Search() {
                         limit: 5,
                     },
                 });
-                console.log(res);
-                setsearchResult(res);
+                const dataMap = res.data.products;
+                setsearchResult(dataMap);
                 setloadding(false);
             } catch (error) {
                 setloadding(false);
@@ -74,7 +74,7 @@ function Search() {
                 render={(attrs) => (
                     <div className={cx('search-result')} tabIndex="-1" {...attrs}>
                         <h3 className={cx('search-title')}>Sản phẩm:</h3>
-                        {searchResult.map((result, index) => (
+                        {searchResult?.map((result, index) => (
                             <Link
                                 to={`/detail/${result.slug}`}
                                 onClick={handleClear}

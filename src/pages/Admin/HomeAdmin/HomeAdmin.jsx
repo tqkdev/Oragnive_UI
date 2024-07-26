@@ -32,7 +32,8 @@ function HomeAdmin() {
             try {
                 setIsLoader(true);
                 const res = await request.get('product');
-                setallProducts(res);
+                const productmap = res.data.products;
+                setallProducts(productmap);
                 setIsLoader(false);
             } catch (error) {
                 console.log(error);
@@ -45,7 +46,7 @@ function HomeAdmin() {
     // delete product
     const handleDelete = async (id) => {
         try {
-            await deleteProduct(id, dispatch, navigate, isAdmin.accessToken, axiosJWT);
+            await deleteProduct(id, dispatch, navigate, isAdmin?.data.accessToken, axiosJWT);
             setRefresh(!refresh);
         } catch (error) {
             console.log(error);
@@ -84,16 +85,16 @@ function HomeAdmin() {
                                 <div className={cx('header-action')}>Action</div>
                             </div>
 
-                            {allProducts.map((product) => (
+                            {allProducts?.map((product) => (
                                 <div key={product._id} className={cx('product')}>
                                     <div className={cx('header-name', 'product-name')}>{product.name}</div>
                                     <div className={cx('header-category', 'product-category')}> {product.category}</div>
                                     <div className={cx('header-des', 'product-des')}>{product.description}</div>
                                     <div className={cx('header-action')}>
-                                        <Link to={`/admin/main/read/${product.slug}`} className={cx('btn-read')}>
+                                        <Link to={`/admin/main/read/${product._id}`} className={cx('btn-read')}>
                                             Read
                                         </Link>
-                                        <Link to={`/admin/main/update/${product.slug}`} className={cx('btn-edit')}>
+                                        <Link to={`/admin/main/update/${product._id}`} className={cx('btn-edit')}>
                                             Edit
                                         </Link>
                                         <button onClick={() => handleDelete(product._id)} className={cx('btn-delete')}>

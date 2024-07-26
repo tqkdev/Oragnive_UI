@@ -5,12 +5,11 @@ import { useState, useEffect, useRef } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faGear, faRightFromBracket, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-import { logoutUser } from '../../../redux/User/userApiRequest';
 import { logoutSuccess } from '../../../redux/User/userSlice';
 import { createAxiosUser } from '../../../components/axiosJWT/axiosJWT';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { getOrder, deleteProductOrder } from '../../../redux/User/userApiRequest';
+import { getOrder, deleteProductOrder, logoutUser } from '../../../redux/User/userApiRequest';
 import { getOrderSuccess, deleteOrderSuccess } from '../../../redux/User/OrderSlice';
 import Loader from '../../../components/Loader/Loader';
 
@@ -123,7 +122,7 @@ function Header() {
     let axiosJWT = createAxiosUser(isUser, dispatch, logoutSuccess);
     const handleLogOut = () => {
         setIsLoader(true);
-        logoutUser(dispatch, navigate, isUser?.accessToken, axiosJWT).finally(() => {
+        logoutUser(dispatch, navigate, isUser?.data.accessToken, axiosJWT).finally(() => {
             setIsLoader(false);
         });
         localStorage.removeItem('persist:root');
@@ -136,7 +135,7 @@ function Header() {
         // kiểm tra nếu đã đăng nhập thì hiện cart || login
         if (isUser) {
             // getOrder(isUser?._id, dispatch, isUser?.accessToken, axiosOrder);
-            dispatch(getOrder(isUser?._id, isUser?.accessToken, axiosOrder));
+            dispatch(getOrder(isUser?.data._id, isUser?.data.accessToken, axiosOrder));
             toggleCart();
         } else {
             toLogin();
@@ -146,10 +145,10 @@ function Header() {
     // lấy sản phẩm giỏ hàng
     let axiosOrder = createAxiosUser(isUser, dispatch, getOrderSuccess);
     const isOrdercart = useSelector((state) => state.order?.product.order);
-    const productCart = isOrdercart ? isOrdercart.order : [];
+    const productCart = isOrdercart ? isOrdercart.data?.order : [];
 
     // Tính tổng tiền giỏ hàng
-    if (productCart.length > 0) {
+    if (productCart?.length > 0) {
         var totalPrice = productCart.reduce((accumulator, currentValue) => {
             return accumulator + currentValue.product_price * currentValue.quality;
         }, 0);
@@ -162,9 +161,9 @@ function Header() {
         const newProductOrder = {
             product_id: productId,
         };
-        dispatch(deleteProductOrder(isUser?._id, isUser?.accessToken, newProductOrder, axiosDeleteOrder))
+        dispatch(deleteProductOrder(isUser?.data._id, isUser?.data.accessToken, newProductOrder, axiosDeleteOrder))
             .then(() => {
-                dispatch(getOrder(isUser?._id, isUser?.accessToken, axiosOrder));
+                dispatch(getOrder(isUser?.data._id, isUser?.data.accessToken, axiosOrder));
             })
             .catch((error) => {
                 console.error('Lỗi khi xóa sản phẩm:', error);
@@ -260,10 +259,10 @@ function Header() {
                                 {IsLoaderCart && <Loader />}
                                 <h3 className={cx('cart-title')}>Sản phẩm trong giỏ hàng:</h3>
 
-                                {productCart.length === 0 ? (
+                                {productCart?.length === 0 ? (
                                     <h3 className={cx('giohangtrong')}>Giỏ hàng trống</h3>
                                 ) : (
-                                    productCart.map((product) => (
+                                    productCart?.map((product) => (
                                         <div key={product._id} className={cx('item-cart')}>
                                             <div className={cx('img-cart')}>
                                                 <img src={product.product_image} alt={product.product_image} />
@@ -301,7 +300,7 @@ function Header() {
                                 <div className={cx('thanhtoan')}>
                                     <div className={cx('total-rice')}>
                                         <h5>Tổng:</h5>
-                                        {productCart.length === 0 ? <h4>0đ</h4> : <h4>{totalPrice}đ</h4>}
+                                        {productCart?.length === 0 ? <h4>0đ</h4> : <h4>{totalPrice}đ</h4>}
                                     </div>
                                     <Link to="/" className={cx('btn-thanhtoan')}>
                                         Thanh Toán

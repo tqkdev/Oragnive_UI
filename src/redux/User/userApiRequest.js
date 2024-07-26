@@ -56,7 +56,10 @@ export const logoutUser = async (dispatch, navigate, accessToken, axiosJWT) => {
         await axiosJWT.post(
             'http://localhost:3001/api/user/logout',
             {},
-            { withCredentials: true, headers: { token: `Bearer ${accessToken}`, 'Content-Type': 'application/json' } },
+            {
+                withCredentials: 'include',
+                headers: { token: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+            },
         );
         dispatch(logoutSuccess());
         navigate('/');

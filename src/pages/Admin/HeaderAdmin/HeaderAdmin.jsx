@@ -44,7 +44,7 @@ function HeaderAdmin() {
     // Logout
     const handleLogOut = () => {
         setIsLoader(true);
-        logoutAdmin(dispatch, navigate, isAdmin?.accessToken, axiosJWT).finally(() => {
+        logoutAdmin(dispatch, navigate, isAdmin?.data.accessToken, axiosJWT).finally(() => {
             setIsLoader(false);
         });
         localStorage.removeItem('persist:root');

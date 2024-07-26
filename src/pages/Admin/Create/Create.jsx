@@ -46,7 +46,7 @@ function Create() {
             nguongoc: nguonGoc,
             slug: slug,
         };
-        addProduct(newProduct, dispatch, navigate, isAdmin.accessToken, axiosJWT).finally(() => {
+        addProduct(newProduct, dispatch, navigate, isAdmin?.data.accessToken, axiosJWT).finally(() => {
             setIsLoader(false);
         });
     }

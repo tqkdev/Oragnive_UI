@@ -24,7 +24,7 @@ function Cart() {
     // lấy sản phẩm giỏ hàng
     let axiosOrder = createAxiosUser(isUser, dispatch, getOrderSuccess);
     const handleOrderCart = () => {
-        dispatch(getOrder(isUser?._id, isUser?.accessToken, axiosOrder));
+        dispatch(getOrder(isUser?.data._id, isUser?.data.accessToken, axiosOrder));
     };
     useEffect(() => {
         handleOrderCart();
@@ -32,8 +32,8 @@ function Cart() {
 
     // Tính tổng tiền
     const isOrdercart = useSelector((state) => state.order.product.order);
-    const productCart = isOrdercart.order;
-    if (productCart.length > 0) {
+    const productCart = isOrdercart.data.order;
+    if (productCart?.length > 0) {
         var totalPrice = productCart.reduce((accumulator, currentValue) => {
             return accumulator + currentValue.product_price * currentValue.quality;
         }, 0);
@@ -46,9 +46,9 @@ function Cart() {
         const newProductOrder = {
             product_id: productId,
         };
-        dispatch(deleteProductOrder(isUser?._id, isUser?.accessToken, newProductOrder, axiosDeleteOrder))
+        dispatch(deleteProductOrder(isUser?.data._id, isUser?.data.accessToken, newProductOrder, axiosDeleteOrder))
             .then(() => {
-                dispatch(getOrder(isUser?._id, isUser?.accessToken, axiosOrder));
+                dispatch(getOrder(isUser?.data._id, isUser?.data.accessToken, axiosOrder));
             })
             .catch((error) => {
                 console.error('Lỗi khi xóa sản phẩm:', error);
@@ -68,9 +68,9 @@ function Cart() {
             quality: increase,
             product_id: product.product_id,
         };
-        dispatch(updateQualityOrder(isUser?._id, isUser?.accessToken, productOrder, axiosUpdateQuality))
+        dispatch(updateQualityOrder(isUser?.data._id, isUser?.data.accessToken, productOrder, axiosUpdateQuality))
             .then(() => {
-                dispatch(getOrder(isUser?._id, isUser?.accessToken, axiosOrder));
+                dispatch(getOrder(isUser?.data._id, isUser?.data.accessToken, axiosOrder));
             })
             .catch((error) => {
                 console.error('Lỗi khi tăng số lượng sản phẩm:', error);
@@ -89,9 +89,9 @@ function Cart() {
                 quality: increase,
                 product_id: product.product_id,
             };
-            dispatch(updateQualityOrder(isUser?._id, isUser?.accessToken, productOrder, axiosOrder))
+            dispatch(updateQualityOrder(isUser?.data._id, isUser?.data.accessToken, productOrder, axiosOrder))
                 .then(() => {
-                    dispatch(getOrder(isUser?._id, isUser?.accessToken, axiosOrder));
+                    dispatch(getOrder(isUser?.data._id, isUser?.data.accessToken, axiosOrder));
                 })
                 .catch((error) => {
                     console.error('Lỗi khi giảm số lượng sản phẩm:', error);
@@ -143,14 +143,16 @@ function Cart() {
 
                             <div className={cx('border')}></div>
 
-                            {productCart.length === 0 ? (
+                            {productCart?.length === 0 ? (
                                 <h3 className={cx('giohangtrong')}>Giỏ hàng trống</h3>
                             ) : (
-                                productCart.map((product) => (
+                                productCart?.map((product) => (
                                     <div key={product._id} className={cx('item-cart')}>
                                         <div className={cx('info-cart', 'col1')}>
                                             <div className={cx('img-cart')}>
-                                                <img src={product.product_image} alt={product.product_name} />
+                                                <div className={cx('img-cart-border')}>
+                                                    <img src={product.product_image} alt={product.product_name} />
+                                                </div>
                                             </div>
                                             <div className={cx('name')}>
                                                 <h3>{product.product_name}</h3>
@@ -212,7 +214,7 @@ function Cart() {
                             <div className={cx('total')}>
                                 <p className={cx('total-txt')}>Tổng cộng</p>
 
-                                {productCart.length === 0 ? (
+                                {productCart?.length === 0 ? (
                                     <p className={cx('total-number')}>0 đ</p>
                                 ) : (
                                     <p className={cx('total-number')}>{totalPrice} đ</p>

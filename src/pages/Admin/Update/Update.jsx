@@ -67,7 +67,7 @@ function Update() {
             slug: slug === '' ? slugDefault : slug,
         };
 
-        updateProduct(params.slug, dispatch, navigate, isAdmin.accessToken, newProduct, axiosJWT);
+        updateProduct(params.slug, dispatch, navigate, isAdmin?.data.accessToken, newProduct, axiosJWT);
     }
 
     return (
@@ -88,7 +88,7 @@ function Update() {
                             </div>
                         </div>
                     </div>
-                    <h2 className={cx('title')}>Update: {params.slug}</h2>
+                    <h2 className={cx('title')}>Update</h2>
                     <div className={cx('update')}>
                         <form onSubmit={handleUpdate} className={cx('form')}>
                             <div className={cx('form-input')}>

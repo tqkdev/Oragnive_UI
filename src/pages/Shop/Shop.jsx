@@ -82,7 +82,8 @@ function About() {
         if (type === 'all') {
             try {
                 const res = await request.get('product');
-                setProducts(res);
+                const productmap = res.data.products;
+                setProducts(productmap);
             } catch (error) {
                 console.log('error');
             }
@@ -97,8 +98,9 @@ function About() {
                 category = 'trai-cay';
             }
             try {
-                const res = await request.get(`category/${category}`);
-                setProducts(res.id_product);
+                const res = await request.get(`product/category/${category}`);
+                const productmap = res.data.products;
+                setProducts(productmap);
             } catch (error) {
                 console.log('error');
             }
@@ -123,7 +125,7 @@ function About() {
             quality: 1,
         };
         if (isUser) {
-            dispatch(updateOrder(isUser?._id, isUser?.accessToken, newProductOrder, axiosOrder));
+            dispatch(updateOrder(isUser?.data._id, isUser?.data.accessToken, newProductOrder, axiosOrder));
         }
     };
 
@@ -290,15 +292,15 @@ function About() {
                         </div>
                         {isShowList && (
                             <div className={cx('shop-list')}>
-                                {products.map((product) => (
+                                {products?.map((product) => (
                                     <div key={product._id} className={cx('item')}>
                                         <div className={cx('img-item')}>
-                                            <Link to={`/detail/${product.slug}`}>
+                                            <Link to={`/detail/${product._id}`}>
                                                 <img src={product.image_url} alt={product.name} />
                                             </Link>
                                         </div>
                                         <div className={cx('info-item')}>
-                                            <Link to={`/detail/${product.slug}`}>
+                                            <Link to={`/detail/${product._id}`}>
                                                 <h1 className={cx('title-item')}>{product.name}</h1>
                                             </Link>
                                             <p className={cx('price-item')}>{product.price}đ</p>
@@ -328,7 +330,7 @@ function About() {
                                                 alt={product.name}
                                             />
                                             <div className={cx('info-grid')}>
-                                                <Link to={`/detail/${product.slug}`} className={cx('name-grid')}>
+                                                <Link to={`/detail/${product._id}`} className={cx('name-grid')}>
                                                     {product.name}
                                                 </Link>
                                                 <h4 className={cx('price-grid')}>{product.price}đ</h4>

@@ -28,8 +28,8 @@ function Search() {
                         limit: 10,
                     },
                 });
-                setSearch(res);
-                console.log(res);
+                const dataMap = res.data.products;
+                setSearch(dataMap);
             } catch (error) {
                 console.log(error);
             }
@@ -48,7 +48,7 @@ function Search() {
             <div className={cx('inner')}>
                 <div className={cx('container')}>
                     <div className={cx('shop-list')}>
-                        {seach.map((product) => (
+                        {seach?.map((product) => (
                             <div key={product._id} className={cx('item')}>
                                 <div className={cx('img-item')}>
                                     <Link>

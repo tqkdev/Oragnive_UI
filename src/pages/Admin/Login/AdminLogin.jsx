@@ -11,7 +11,7 @@ const cx = className.bind(styles);
 
 function AminLogin() {
     const [IsLoader, setIsLoader] = useState(false);
-    const [admin, setAdmin] = useState('');
+    const [emailAdmin, setEmailAdmin] = useState('');
     const [password, setPassword] = useState('');
 
     const dispatch = useDispatch();
@@ -21,7 +21,7 @@ function AminLogin() {
         e.preventDefault();
         setIsLoader(true);
         const newAdmin = {
-            username: admin,
+            email: emailAdmin,
             password: password,
         };
         loginAdmin(newAdmin, dispatch, navigate).finally(() => {
@@ -40,8 +40,8 @@ function AminLogin() {
                     <div className={cx('login')}>
                         <form onSubmit={handleLogin} className={cx('form')}>
                             <div className={cx('form-input')}>
-                                <p className={cx('txt-input')}>Username or email address</p>
-                                <input className={cx('username')} onChange={(e) => setAdmin(e.target.value)} />
+                                <p className={cx('txt-input')}>Email address</p>
+                                <input className={cx('username')} onChange={(e) => setEmailAdmin(e.target.value)} />
                             </div>
                             <div className={cx('form-input')}>
                                 <p className={cx('txt-input')}>Password</p>

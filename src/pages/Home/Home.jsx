@@ -45,9 +45,11 @@ function Home() {
         if (type === 'all') {
             try {
                 const res = await request.get('product');
-                setProducts(res);
+                const productmap = res.data.products;
+
+                setProducts(productmap);
             } catch (error) {
-                console.log('error');
+                console.log(error);
             }
         } else {
             if (type === 'rau') {
@@ -61,14 +63,16 @@ function Home() {
             }
             try {
                 setIsLoading(true);
-                const res = await request.get(`category/${category}`);
-                setProducts(res.id_product);
+                const res = await request.get(`product/category/${category}`);
+                const productmap = res.data.products;
+                setProducts(productmap);
                 setIsLoading(false);
             } catch (error) {
                 console.log('error');
             }
         }
     };
+
     const handleFilterClick = (filter) => {
         setActiveFilter(filter);
     };
@@ -87,7 +91,7 @@ function Home() {
             quality: 1,
         };
         if (isUser) {
-            dispatch(updateOrder(isUser?._id, isUser?.accessToken, newProductOrder, axiosOrder));
+            dispatch(updateOrder(isUser?.data._id, isUser?.data.accessToken, newProductOrder, axiosOrder));
         }
     };
 
@@ -172,11 +176,11 @@ function Home() {
                     </div>
                     <div className={cx('grid-product')}>
                         {isLoading && <Loader />}
-                        {products.map((product) => (
+                        {products?.map((product) => (
                             <div key={product._id} className={cx('item-product')}>
                                 <img className={cx('item-product-img')} src={product.image_url} alt={product.name} />
                                 <div className={cx('info-product')}>
-                                    <Link to={`/detail/${product.slug}`} className={cx('name-product')}>
+                                    <Link to={`/detail/${product._id}`} className={cx('name-product')}>
                                         {product.name}
                                     </Link>
                                     <h4 className={cx('price-product')}>{product.price}đ</h4>

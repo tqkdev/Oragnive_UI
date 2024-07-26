@@ -45,7 +45,8 @@ export const addProduct = async (product, dispatch, navigate, accessToken, axios
     dispatch(createStart());
     try {
         const res = await axiosJWT.post('http://localhost:3001/api/product', product, {
-            headers: { token: `Bearer ${accessToken}` },
+            withCredentials: 'include',
+            headers: { token: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
         });
         dispatch(createSuccess(res.data));
         navigate('/admin/main');
@@ -54,10 +55,32 @@ export const addProduct = async (product, dispatch, navigate, accessToken, axios
     }
 };
 
+// export const deleteProduct = async (id, dispatch, navigate, accessToken, axiosJWT) => {
+//     dispatch(deleteStart());
+//     try {
+//         // const res = await axiosJWT.delete('http://localhost:3001/api/product/' + id, {
+//         //     headers: { token: `Bearer ${accessToken}` },
+//         // });
+
+//         console.log(accessToken);
+//         const res = await axiosJWT.delete(
+//             `http://localhost:3001/api/product/${id}`,
+//             {},
+//             {
+//                 headers: { token: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+//             },
+//         );
+//         dispatch(deleteSuccess(res.data));
+//         navigate('/admin/main');
+//     } catch (error) {
+//         dispatch(deleteFailed());
+//     }
+// };
+
 export const deleteProduct = async (id, dispatch, navigate, accessToken, axiosJWT) => {
     dispatch(deleteStart());
     try {
-        const res = await axiosJWT.delete('http://localhost:3001/api/product/' + id, {
+        const res = await axiosJWT.delete('http://localhost:3001/api/product/' + id, '', {
             headers: { token: `Bearer ${accessToken}` },
         });
         dispatch(deleteSuccess(res.data));

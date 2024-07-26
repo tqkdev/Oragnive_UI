@@ -90,7 +90,7 @@ const Slideshow = ({ productSlide, handleShowSwal }) => {
         };
 
         if (isUser) {
-            dispatch(updateOrder(isUser?._id, isUser?.accessToken, newProductOrder, axiosOrder));
+            dispatch(updateOrder(isUser?.data._id, isUser?.data.accessToken, newProductOrder, axiosOrder));
             handleShowSwal();
         } else {
             toLogin();
@@ -101,12 +101,12 @@ const Slideshow = ({ productSlide, handleShowSwal }) => {
         <div ref={slideshowRef}>
             <Slider {...settings}>
                 {/* eslint-disable-next-line react/prop-types */}
-                {productSlide.map((product) => (
+                {productSlide?.map((product) => (
                     <div key={product._id} className={cx('item-slick-container')}>
                         <div className={cx('item-slick')}>
                             <img className={cx('item-product-img')} src={product.image_url} alt={product.name} />
                             <div className={cx('info-slick')}>
-                                <Link to={`/detail/${product.slug}`} className={cx('name-slick')}>
+                                <Link to={`/detail/${product._id}`} className={cx('name-slick')}>
                                     {product.name}
                                 </Link>
                                 <h4 className={cx('price-slick')}>{product.price}đ</h4>
