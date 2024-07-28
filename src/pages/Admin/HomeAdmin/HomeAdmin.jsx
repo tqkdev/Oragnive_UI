@@ -12,6 +12,7 @@ import { deleteProduct } from '../../../redux/Admin/adminApiRequest';
 import { createAxiosAdmin } from '../../../components/axiosJWT/axiosJWT';
 import { loginSuccess } from '../../../redux/Admin/adminSlice';
 import Loader from '../../../components/Loader/Loader';
+import { Pagination } from '@mui/material';
 
 const cx = className.bind(styles);
 
@@ -21,17 +22,33 @@ function HomeAdmin() {
     const [allProducts, setallProducts] = useState([]);
     const [refresh, setRefresh] = useState(false);
     const [IsLoader, setIsLoader] = useState(false);
+    const [totalPages, setTotalPages] = useState(0);
+    const [page, setPage] = useState(1);
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
     let axiosJWT = createAxiosAdmin(isAdmin, dispatch, loginSuccess);
+
+    // xử lí phân trang
+    const handleChange = (event, value) => {
+        setPage(value);
+    };
 
     // get product
     useEffect(() => {
         const fetchApi = async () => {
             try {
                 setIsLoader(true);
-                const res = await request.get('product');
+                // const res = await request.get('product');
+                const res = await request.get('product', {
+                    params: {
+                        // q: searchParams.q,
+                        page: page,
+                        limit: 10,
+                    },
+                });
+                const totalPages = res.data.pagination.totalPages;
+                setTotalPages(totalPages);
                 const productmap = res.data.products;
                 setallProducts(productmap);
                 setIsLoader(false);
@@ -41,7 +58,7 @@ function HomeAdmin() {
         };
 
         fetchApi();
-    }, [refresh]);
+    }, [refresh, page]);
 
     // delete product
     const handleDelete = async (id) => {
@@ -103,6 +120,16 @@ function HomeAdmin() {
                                     </div>
                                 </div>
                             ))}
+                        </div>
+                        <div className={cx('shop-page')}>
+                            <Pagination
+                                count={totalPages}
+                                page={page}
+                                // size="large"
+                                variant="outlined"
+                                shape="rounded"
+                                onChange={handleChange}
+                            ></Pagination>
                         </div>
                     </div>
                 </div>

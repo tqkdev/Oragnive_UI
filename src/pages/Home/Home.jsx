@@ -44,7 +44,13 @@ function Home() {
 
         if (type === 'all') {
             try {
-                const res = await request.get('product');
+                const res = await request.get('product', {
+                    params: {
+                        // q: searchParams.q,
+                        page: 1,
+                        limit: 4,
+                    },
+                });
                 const productmap = res.data.products;
 
                 setProducts(productmap);
@@ -63,7 +69,14 @@ function Home() {
             }
             try {
                 setIsLoading(true);
-                const res = await request.get(`product/category/${category}`);
+                // const res = await request.get(`product/category/${category}`);
+                const res = await request.get(`product/category/${category}`, {
+                    params: {
+                        // q: searchParams.q,
+                        page: 1,
+                        limit: 4,
+                    },
+                });
                 const productmap = res.data.products;
                 setProducts(productmap);
                 setIsLoading(false);

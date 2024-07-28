@@ -6,15 +6,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
 import * as request from '../../utils/request';
+import { Pagination } from '@mui/material';
 
 const cx = className.bind(styles);
 
 function Search() {
     const [isswal, setIsswal] = useState(false);
     const [seach, setSearch] = useState([]);
+    const [totalPages, setTotalPages] = useState(0);
+    const [page, setPage] = useState(1);
 
     const handleShowSwal = () => {
         setIsswal(!isswal);
+    };
+
+    // xử lí phân trang
+    const handleChange = (event, value) => {
+        setPage(value);
     };
 
     const searchParams = useParams();
@@ -24,19 +32,21 @@ function Search() {
                 const res = await request.get('search/keyword', {
                     params: {
                         q: searchParams.q,
-                        page: 1,
-                        limit: 10,
+                        page: page,
+                        limit: 8,
                     },
                 });
+                const totalPages = res.data.totalPages;
                 const dataMap = res.data.products;
                 setSearch(dataMap);
+                setTotalPages(totalPages);
             } catch (error) {
                 console.log(error);
             }
         };
 
         fetchApi();
-    }, [searchParams.q]);
+    }, [searchParams.q, page]);
 
     return (
         <div className={cx('wrapper')}>
@@ -67,6 +77,17 @@ function Search() {
                                 </div>
                             </div>
                         ))}
+                    </div>
+
+                    <div className={cx('shop-page')}>
+                        <Pagination
+                            count={totalPages}
+                            page={page}
+                            size="large"
+                            variant="outlined"
+                            shape="rounded"
+                            onChange={handleChange}
+                        ></Pagination>
                     </div>
                 </div>
             </div>

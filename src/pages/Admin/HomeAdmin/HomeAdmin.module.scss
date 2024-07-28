@@ -172,6 +172,13 @@
         cursor: pointer;
     }
 }
+////shop-page
+.shop-page {
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+
 @media only screen and (max-width: 740px) {
     .path-iconback {
         display: none;

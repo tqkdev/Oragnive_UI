@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { Pagination } from '@mui/material';
 import * as request from '../../utils/request';
 import Search from './Search/Search';
 
@@ -22,6 +23,8 @@ function About() {
     const [isswal, setIsswal] = useState(false);
     const [activeFilter, setActiveFilter] = useState('all');
     const [products, setProducts] = useState([]);
+    const [totalPages, setTotalPages] = useState(0);
+    const [page, setPage] = useState(1);
 
     const toLogin = () => {
         window.location.href = '/login';
@@ -71,19 +74,34 @@ function About() {
         }
     };
 
+    // xử lí phân trang
+    const handleChange = (event, value) => {
+        setPage(value);
+    };
+
     // get data mặc định all
     useEffect(() => {
         fetchApi('all');
-    }, []);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [page]);
 
     const fetchApi = async (type) => {
         let category = '';
 
         if (type === 'all') {
             try {
-                const res = await request.get('product');
+                // const res = await request.get('product');
+                const res = await request.get('product', {
+                    params: {
+                        // q: searchParams.q,
+                        page: page,
+                        limit: 6,
+                    },
+                });
                 const productmap = res.data.products;
+                const totalPages = res.data.pagination.totalPages;
                 setProducts(productmap);
+                setTotalPages(totalPages);
             } catch (error) {
                 console.log('error');
             }
@@ -98,7 +116,15 @@ function About() {
                 category = 'trai-cay';
             }
             try {
-                const res = await request.get(`product/category/${category}`);
+                // const res = await request.get(`product/category/${category}`);
+
+                const res = await request.get(`product/category/${category}`, {
+                    params: {
+                        // q: searchParams.q,
+                        page: page,
+                        limit: 6,
+                    },
+                });
                 const productmap = res.data.products;
                 setProducts(productmap);
             } catch (error) {
@@ -351,7 +377,16 @@ function About() {
                                 </div>
                             </div>
                         )}
-                        <div className={cx('shop-page')}></div>
+                        <div className={cx('shop-page')}>
+                            <Pagination
+                                count={totalPages}
+                                page={page}
+                                size="large"
+                                variant="outlined"
+                                shape="rounded"
+                                onChange={handleChange}
+                            ></Pagination>
+                        </div>
                     </div>
                 </div>
             </div>
