@@ -58,7 +58,7 @@ function HomeAdmin() {
     // delete product
     const handleDelete = async (id) => {
         try {
-            await axiosJWT.delete('http://localhost:3001/api/product/' + id, '', {
+            await axiosJWT.delete(`${import.meta.env.VITE_URL_BACKEND}/product/` + id, '', {
                 headers: { token: `Bearer ${isAdmin?.data.accessToken}` },
             });
             setRefresh(!refresh);

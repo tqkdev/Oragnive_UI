@@ -66,7 +66,7 @@ function Update() {
         };
 
         try {
-            await axiosJWT.put('http://localhost:3001/api/product/' + params.slug, newProduct, {
+            await axiosJWT.put(`${import.meta.env.VITE_URL_BACKEND}/product/` + params.slug, newProduct, {
                 headers: { token: `Bearer ${isAdmin?.data.accessToken}` },
             });
             window.location.href = '/admin/main';

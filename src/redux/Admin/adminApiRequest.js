@@ -4,7 +4,7 @@ import { loginStart, loginFailed, loginSuccess, logoutStart, logoutFailed, logou
 export const loginAdmin = async (admin, dispatch, navigate) => {
     dispatch(loginStart());
     try {
-        const res = await axios.post('http://localhost:3001/api/admin/login', admin, {
+        const res = await axios.post(`${import.meta.env.VITE_URL_BACKEND}/admin/login`, admin, {
             withCredentials: true,
         });
         dispatch(loginSuccess(res.data));
@@ -18,7 +18,7 @@ export const logoutAdmin = async (dispatch, navigate, accessToken, axiosJWT) => 
     dispatch(logoutStart());
     try {
         await axiosJWT.post(
-            'http://localhost:3001/api/admin/logout',
+            `${import.meta.env.VITE_URL_BACKEND}/admin/logout`,
 
             {},
             { withCredentials: true, headers: { token: `Bearer ${accessToken}`, 'Content-Type': 'application/json' } },

@@ -136,7 +136,7 @@ function Header() {
         // kiểm tra nếu đã đăng nhập thì hiện cart || login
         if (isUser) {
             try {
-                const res = await axiosJWT.get(`http://localhost:3001/api/order/${isUser?.data._id}`, {
+                const res = await axiosJWT.get(`${import.meta.env.VITE_URL_BACKEND}/order/${isUser?.data._id}`, {
                     headers: { token: `Bearer ${isUser?.data.accessToken}` },
                 });
                 // console.log(res);
@@ -169,13 +169,12 @@ function Header() {
         if (isUser) {
             try {
                 const res = await axiosJWT.put(
-                    'http://localhost:3001/api/order/delete/' + isUser?.data._id,
+                    `${import.meta.env.VITE_URL_BACKEND}/order/delete/` + isUser?.data._id,
                     newProductOrder,
                     {
                         headers: { token: `Bearer ${isUser?.data.accessToken}` },
                     },
                 );
-                // console.log(res);
                 const setProductCartmap = res.data.data.order;
                 setProductCart(setProductCartmap);
                 setIsLoaderCart(false);

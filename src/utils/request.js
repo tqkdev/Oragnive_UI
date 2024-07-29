@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const request = axios.create({
-    baseURL: 'http://localhost:3001/api/',
+    baseURL: `${import.meta.env.VITE_URL_BACKEND}/`,
 });
 export const get = async (path, options = {}) => {
     const response = await request.get(path, options);

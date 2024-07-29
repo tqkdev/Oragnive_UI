@@ -5,7 +5,7 @@ import axios from 'axios';
 const apirefreshTokenAdmin = async (adminid) => {
     try {
         const res = await axios.post(
-            'http://localhost:3001/api/admin/refresh',
+            `${import.meta.env.VITE_URL_BACKEND}admin/refresh`,
             { adminid: `${adminid}` },
             { headers: { 'Content-Type': 'application/json' }, withCredentials: true },
         );
@@ -55,7 +55,7 @@ export const createAxiosAdmin = (isCurrent, dispatch, stateSuccess) => {
 const apirefreshTokenUser = async (userid) => {
     try {
         const res = await axios.post(
-            'http://localhost:3001/api/user/refresh',
+            `${import.meta.env.VITE_URL_BACKEND}/user/refresh`,
             { userid: `${userid}` },
             { headers: { 'Content-Type': 'application/json' }, withCredentials: true },
         );

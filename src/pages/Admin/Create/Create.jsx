@@ -41,7 +41,7 @@ function Create() {
             slug: slug,
         };
         try {
-            await axiosJWT.post('http://localhost:3001/api/product', newProduct, {
+            await axiosJWT.post(`${import.meta.env.VITE_URL_BACKEND}/product`, newProduct, {
                 withCredentials: 'include',
                 headers: { token: `Bearer ${isAdmin?.data.accessToken}`, 'Content-Type': 'application/json' },
             });

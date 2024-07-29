@@ -32,7 +32,7 @@ function Cart() {
         const handleOrderCart = async () => {
             if (isUser) {
                 try {
-                    const res = await axiosJWT.get(`http://localhost:3001/api/order/${isUser?.data._id}`, {
+                    const res = await axiosJWT.get(`${import.meta.env.VITE_URL_BACKEND}/order/${isUser?.data._id}`, {
                         headers: { token: `Bearer ${isUser?.data.accessToken}` },
                     });
                     // console.log(res);
@@ -66,7 +66,7 @@ function Cart() {
         if (isUser) {
             try {
                 const res = await axiosJWT.put(
-                    'http://localhost:3001/api/order/delete/' + isUser?.data._id,
+                    `${import.meta.env.VITE_URL_BACKEND}/order/delete/` + isUser?.data._id,
                     newProductOrder,
                     {
                         headers: { token: `Bearer ${isUser?.data.accessToken}` },
@@ -94,7 +94,7 @@ function Cart() {
         };
         try {
             const res = await axiosJWT.put(
-                `http://localhost:3001/api/order/quality/${isUser?.data._id}`,
+                `${import.meta.env.VITE_URL_BACKEND}/order/quality/${isUser?.data._id}`,
                 productOrder,
                 {
                     headers: { token: `Bearer ${isUser?.data.accessToken}` },
@@ -119,7 +119,7 @@ function Cart() {
             };
             try {
                 const res = await axiosJWT.put(
-                    `http://localhost:3001/api/order/quality/${isUser?.data._id}`,
+                    `${import.meta.env.VITE_URL_BACKEND}/order/quality/${isUser?.data._id}`,
                     productOrder,
                     {
                         headers: { token: `Bearer ${isUser?.data.accessToken}` },

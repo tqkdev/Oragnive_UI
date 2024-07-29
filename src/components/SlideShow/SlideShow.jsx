@@ -91,9 +91,13 @@ const Slideshow = ({ productSlide, handleShowSwal }) => {
         if (isUser) {
             if (isUser) {
                 try {
-                    await axiosJWT.put(`http://localhost:3001/api/order/${isUser?.data._id}`, newProductOrder, {
-                        headers: { token: `Bearer ${isUser?.data.accessToken}` },
-                    });
+                    await axiosJWT.put(
+                        `${import.meta.env.VITE_URL_BACKEND}/order/${isUser?.data._id}`,
+                        newProductOrder,
+                        {
+                            headers: { token: `Bearer ${isUser?.data.accessToken}` },
+                        },
+                    );
                 } catch (error) {
                     console.log(error);
                 }

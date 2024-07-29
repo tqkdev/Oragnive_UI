@@ -76,7 +76,7 @@ function Search() {
                         <h3 className={cx('search-title')}>Sản phẩm:</h3>
                         {searchResult?.map((result, index) => (
                             <Link
-                                to={`/detail/${result.slug}`}
+                                to={`/detail/${result._id}`}
                                 onClick={handleClear}
                                 key={index}
                                 className={cx('item-result')}
