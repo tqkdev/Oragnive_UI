@@ -1,17 +1,16 @@
-import className from 'classnames/bind';
-import styles from './Shop.module.scss';
-import { Link } from 'react-router-dom';
 import { useState, useRef, useEffect } from 'react';
+import className from 'classnames/bind';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretDown, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { Pagination } from '@mui/material';
-import * as request from '../../utils/request';
-import Search from './Search/Search';
 
+import * as request from '../../utils/request';
+import styles from './Shop.module.scss';
+import Search from './Search/Search';
 import { createAxiosUser } from '../../components/axiosJWT/axiosJWT';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateOrder } from '../../redux/User/userApiRequest';
-import { updateOderSuccess } from '../../redux/User/OrderSlice';
+import { loginSuccess } from '../../redux/User/userSlice';
 
 const cx = className.bind(styles);
 
@@ -25,6 +24,10 @@ function About() {
     const [products, setProducts] = useState([]);
     const [totalPages, setTotalPages] = useState(0);
     const [page, setPage] = useState(1);
+
+    const isUser = useSelector((state) => state.user.login.currentUser);
+    const dispatch = useDispatch();
+    let axiosJWT = createAxiosUser(isUser, dispatch, loginSuccess);
 
     const toLogin = () => {
         window.location.href = '/login';
@@ -90,10 +93,8 @@ function About() {
 
         if (type === 'all') {
             try {
-                // const res = await request.get('product');
                 const res = await request.get('product', {
                     params: {
-                        // q: searchParams.q,
                         page: page,
                         limit: 6,
                     },
@@ -116,11 +117,8 @@ function About() {
                 category = 'trai-cay';
             }
             try {
-                // const res = await request.get(`product/category/${category}`);
-
                 const res = await request.get(`product/category/${category}`, {
                     params: {
-                        // q: searchParams.q,
                         page: page,
                         limit: 6,
                     },
@@ -137,11 +135,7 @@ function About() {
     };
 
     // thêm sản phẩm vào giỏ hàng
-    const isUser = useSelector((state) => state.user.login.currentUser);
-    const dispatch = useDispatch();
-    let axiosOrder = createAxiosUser(isUser, dispatch, updateOderSuccess);
-
-    const handleAddOrder = (product) => {
+    const handleAddOrder = async (product) => {
         const newProductOrder = {
             product_id: product._id,
             product_name: product.name,
@@ -151,7 +145,13 @@ function About() {
             quality: 1,
         };
         if (isUser) {
-            dispatch(updateOrder(isUser?.data._id, isUser?.data.accessToken, newProductOrder, axiosOrder));
+            try {
+                await axiosJWT.put(`http://localhost:3001/api/order/${isUser?.data._id}`, newProductOrder, {
+                    headers: { token: `Bearer ${isUser?.data.accessToken}` },
+                });
+            } catch (error) {
+                console.log(error);
+            }
         }
     };
 

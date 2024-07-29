@@ -1,12 +1,12 @@
+import { useEffect, useRef, useState } from 'react';
 import className from 'classnames/bind';
-import * as request from '../../../utils/request';
-import styles from './Search.module.scss';
+import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMagnifyingGlass, faSpinner, faXmark } from '@fortawesome/free-solid-svg-icons';
-
-import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
 import Tippy from '@tippyjs/react/headless';
+
+import * as request from '../../../utils/request';
+import styles from './Search.module.scss';
 import useDebounce from '../../../hook/useDebounce';
 
 const cx = className.bind(styles);

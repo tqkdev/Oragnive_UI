@@ -1,5 +1,5 @@
+import { useEffect, useState } from 'react';
 import className from 'classnames/bind';
-import styles from './SibarAdmin.module.scss';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faBars,
@@ -13,7 +13,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Link } from 'react-router-dom';
 import { faFile, faNewspaper } from '@fortawesome/free-regular-svg-icons';
-import { useEffect, useState } from 'react';
+
+import styles from './SibarAdmin.module.scss';
 
 const cx = className.bind(styles);
 

@@ -4,14 +4,13 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { Link } from 'react-router-dom';
 import className from 'classnames/bind';
-import styles from './SlideShow.module.scss';
+import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCaretLeft, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 
+import styles from './SlideShow.module.scss';
 import { createAxiosUser } from '../axiosJWT/axiosJWT';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateOrder } from '../../redux/User/userApiRequest';
-import { updateOderSuccess } from '../../redux/User/OrderSlice';
+import { loginSuccess } from '../../redux/User/userSlice';
 const cx = className.bind(styles);
 
 const CustomPrevArrow = (props) => (
@@ -33,6 +32,14 @@ const CustomNextArrow = (props) => (
 const Slideshow = ({ productSlide, handleShowSwal }) => {
     const slideshowRef = useRef(null);
     const [slidesToShow, setSlidesToShow] = useState(4);
+
+    const isUser = useSelector((state) => state.user.login.currentUser);
+    const dispatch = useDispatch();
+    let axiosJWT = createAxiosUser(isUser, dispatch, loginSuccess);
+
+    const toLogin = () => {
+        window.location.href = '/login';
+    };
 
     useEffect(() => {
         const handleResize = () => {
@@ -71,15 +78,7 @@ const Slideshow = ({ productSlide, handleShowSwal }) => {
     };
 
     // redux thêm sản phẩm vào giỏ hàng
-    const isUser = useSelector((state) => state.user.login.currentUser);
-    const dispatch = useDispatch();
-    let axiosOrder = createAxiosUser(isUser, dispatch, updateOderSuccess);
-
-    const toLogin = () => {
-        window.location.href = '/login';
-    };
-
-    const handleAddOrder = (product) => {
+    const handleAddOrder = async (product) => {
         const newProductOrder = {
             product_id: product._id,
             product_name: product.name,
@@ -90,7 +89,15 @@ const Slideshow = ({ productSlide, handleShowSwal }) => {
         };
 
         if (isUser) {
-            dispatch(updateOrder(isUser?.data._id, isUser?.data.accessToken, newProductOrder, axiosOrder));
+            if (isUser) {
+                try {
+                    await axiosJWT.put(`http://localhost:3001/api/order/${isUser?.data._id}`, newProductOrder, {
+                        headers: { token: `Bearer ${isUser?.data.accessToken}` },
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+            }
             handleShowSwal();
         } else {
             toLogin();

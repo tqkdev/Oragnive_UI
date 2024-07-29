@@ -1,16 +1,15 @@
-import className from 'classnames/bind';
-import styles from './Home.module.scss';
-import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import * as request from '../../utils/request';
+import className from 'classnames/bind';
+import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
-import Loader from '../../components/Loader/Loader';
 
+import * as request from '../../utils/request';
+import styles from './Home.module.scss';
 import { createAxiosUser } from '../../components/axiosJWT/axiosJWT';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateOrder } from '../../redux/User/userApiRequest';
-import { updateOderSuccess } from '../../redux/User/OrderSlice';
+import { loginSuccess } from '../../redux/User/userSlice';
+import Loader from '../../components/Loader/Loader';
 
 const cx = className.bind(styles);
 
@@ -21,6 +20,9 @@ function Home() {
     const [products, setProducts] = useState([]);
     const [isswal, setIsswal] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    const dispatch = useDispatch();
+    let axiosJWT = createAxiosUser(isUser, dispatch, loginSuccess);
 
     const toLogin = () => {
         window.location.href = '/login';
@@ -46,7 +48,6 @@ function Home() {
             try {
                 const res = await request.get('product', {
                     params: {
-                        // q: searchParams.q,
                         page: 1,
                         limit: 4,
                     },
@@ -69,10 +70,8 @@ function Home() {
             }
             try {
                 setIsLoading(true);
-                // const res = await request.get(`product/category/${category}`);
                 const res = await request.get(`product/category/${category}`, {
                     params: {
-                        // q: searchParams.q,
                         page: 1,
                         limit: 4,
                     },
@@ -91,10 +90,7 @@ function Home() {
     };
 
     // Thêm sản phẩm vào giỏ hàng
-    const dispatch = useDispatch();
-    let axiosOrder = createAxiosUser(isUser, dispatch, updateOderSuccess);
-
-    const handleAddOrder = (product) => {
+    const handleAddOrder = async (product) => {
         const newProductOrder = {
             product_id: product._id,
             product_name: product.name,
@@ -104,10 +100,15 @@ function Home() {
             quality: 1,
         };
         if (isUser) {
-            dispatch(updateOrder(isUser?.data._id, isUser?.data.accessToken, newProductOrder, axiosOrder));
+            try {
+                await axiosJWT.put(`http://localhost:3001/api/order/${isUser?.data._id}`, newProductOrder, {
+                    headers: { token: `Bearer ${isUser?.data.accessToken}` },
+                });
+            } catch (error) {
+                console.log(error);
+            }
         }
     };
-
     return (
         <div className={cx('wapper')}>
             <div className={cx('top')}>

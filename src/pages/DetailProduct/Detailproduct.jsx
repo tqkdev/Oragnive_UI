@@ -1,14 +1,14 @@
+import { useEffect, useState } from 'react';
 import className from 'classnames/bind';
-import styles from './Detailproduct.module.scss';
-import RatingStars from './RatingStars/RatingStars';
-import ProductOrder from './ProductOrder/ProductOrder';
-import Slideshow from '../../components/SlideShow/SlideShow';
+import { useParams } from 'react-router-dom';
 import { faCheck } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import * as request from '../../utils/request';
 
-import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import styles from './Detailproduct.module.scss';
+import * as request from '../../utils/request';
+import ProductOrder from './ProductOrder/ProductOrder';
+import RatingStars from './RatingStars/RatingStars';
+import Slideshow from '../../components/SlideShow/SlideShow';
 
 const cx = className.bind(styles);
 
@@ -17,6 +17,8 @@ function Detailproduct() {
     const [showInformation, setShowInformation] = useState(false);
     const [showReview, setShowReview] = useState(false);
     const [isswal, setIsswal] = useState(false);
+    const [productSlide, setProductSlide] = useState([]);
+    const [productDetail, setDroductDetail] = useState([]);
 
     // hiện mô tả
     const handleDescriptionClick = () => {
@@ -42,9 +44,6 @@ function Detailproduct() {
     const handleShowSwal = () => {
         setIsswal(!isswal);
     };
-
-    const [productSlide, setProductSlide] = useState([]);
-    const [productDetail, setDroductDetail] = useState([]);
 
     // lấy slide sản phẩm
     useEffect(() => {

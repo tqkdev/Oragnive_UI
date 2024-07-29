@@ -1,11 +1,10 @@
 import { useState } from 'react';
 import className from 'classnames/bind';
-import styles from './ProductOrder.module.scss';
-
-import { createAxiosUser } from '../../../components/axiosJWT/axiosJWT';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateOrder } from '../../../redux/User/userApiRequest';
-import { updateOderSuccess } from '../../../redux/User/OrderSlice';
+
+import styles from './ProductOrder.module.scss';
+import { createAxiosUser } from '../../../components/axiosJWT/axiosJWT';
+import { loginSuccess } from '../../../redux/User/userSlice';
 
 const cx = className.bind(styles);
 
@@ -45,8 +44,8 @@ function ProductOrder({ handleShowSwal, productDetail }) {
     };
 
     // thêm sản phẩm vào giỏ hàng
-    let axiosOrder = createAxiosUser(isUser, dispatch, updateOderSuccess);
-    const handleAddOrder = (product) => {
+    let axiosJWT = createAxiosUser(isUser, dispatch, loginSuccess);
+    const handleAddOrder = async (product) => {
         const newProductOrder = {
             product_id: product._id,
             product_name: product.name,
@@ -55,7 +54,13 @@ function ProductOrder({ handleShowSwal, productDetail }) {
             product_slug: product.slug,
             quality: Number(quantity),
         };
-        dispatch(updateOrder(isUser?.data._id, isUser?.data.accessToken, newProductOrder, axiosOrder));
+        try {
+            await axiosJWT.put(`http://localhost:3001/api/order/${isUser?.data._id}`, newProductOrder, {
+                headers: { token: `Bearer ${isUser?.data.accessToken}` },
+            });
+        } catch (error) {
+            console.log(error);
+        }
     };
     const handleAddToCart = () => {
         if (isUser) {

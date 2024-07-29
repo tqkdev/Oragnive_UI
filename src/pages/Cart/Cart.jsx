@@ -1,15 +1,14 @@
 /* eslint-disable react-hooks/exhaustive-deps */
+import { useEffect, useState } from 'react';
 import className from 'classnames/bind';
-import styles from './Cart.module.scss';
+import { Link, Navigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faCoins, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { useEffect, useState } from 'react';
 
-import { Link, Navigate } from 'react-router-dom';
+import styles from './Cart.module.scss';
 import { createAxiosUser } from '../../components/axiosJWT/axiosJWT';
-import { useDispatch, useSelector } from 'react-redux';
-import { getOrder, deleteProductOrder, updateQualityOrder } from '../../redux/User/userApiRequest';
-import { getOrderSuccess, deleteOrderSuccess, updateQualitySuccess } from '../../redux/User/OrderSlice';
+import { loginSuccess } from '../../redux/User/userSlice';
 import Loader from '../../components/Loader/Loader';
 
 const cx = className.bind(styles);
@@ -18,70 +17,99 @@ function Cart() {
     const isUser = useSelector((state) => state.user.login.currentUser);
 
     const [IsLoader, setIsLoader] = useState(false);
+    const [productCart, setProductCart] = useState([]);
 
     const dispatch = useDispatch();
 
-    // lấy sản phẩm giỏ hàng
-    let axiosOrder = createAxiosUser(isUser, dispatch, getOrderSuccess);
-    const handleOrderCart = () => {
-        dispatch(getOrder(isUser?.data._id, isUser?.data.accessToken, axiosOrder));
+    let axiosJWT = createAxiosUser(isUser, dispatch, loginSuccess);
+
+    const toLogin = () => {
+        window.location.href = '/login';
     };
+
+    // lấy sản phẩm giỏ hàng
     useEffect(() => {
+        const handleOrderCart = async () => {
+            if (isUser) {
+                try {
+                    const res = await axiosJWT.get(`http://localhost:3001/api/order/${isUser?.data._id}`, {
+                        headers: { token: `Bearer ${isUser?.data.accessToken}` },
+                    });
+                    // console.log(res);
+                    const setProductCartmap = res.data.data.order;
+                    setProductCart(setProductCartmap);
+                } catch (error) {
+                    console.log(error);
+                }
+            } else {
+                toLogin();
+            }
+        };
         handleOrderCart();
     }, []);
 
     // Tính tổng tiền
-    const isOrdercart = useSelector((state) => state.order.product.order);
-    const productCart = isOrdercart.data.order;
+    let totalPrice = 0;
     if (productCart?.length > 0) {
-        var totalPrice = productCart.reduce((accumulator, currentValue) => {
+        totalPrice = productCart.reduce((accumulator, currentValue) => {
             return accumulator + currentValue.product_price * currentValue.quality;
         }, 0);
     }
 
     // Xóa sản phẩm
-    let axiosDeleteOrder = createAxiosUser(isUser, dispatch, deleteOrderSuccess);
-    const handleDeleteOrder = (productId) => {
+    const handleDeleteOrder = async (productId) => {
         setIsLoader(true);
         const newProductOrder = {
             product_id: productId,
         };
-        dispatch(deleteProductOrder(isUser?.data._id, isUser?.data.accessToken, newProductOrder, axiosDeleteOrder))
-            .then(() => {
-                dispatch(getOrder(isUser?.data._id, isUser?.data.accessToken, axiosOrder));
-            })
-            .catch((error) => {
-                console.error('Lỗi khi xóa sản phẩm:', error);
+        // kiểm tra nếu đã đăng nhập thì hiện cart || login
+        if (isUser) {
+            try {
+                const res = await axiosJWT.put(
+                    'http://localhost:3001/api/order/delete/' + isUser?.data._id,
+                    newProductOrder,
+                    {
+                        headers: { token: `Bearer ${isUser?.data.accessToken}` },
+                    },
+                );
+                const setProductCartmap = res.data.data.order;
+                setProductCart(setProductCartmap);
                 setIsLoader(false);
-            })
-            .finally(() => {
+            } catch (error) {
                 setIsLoader(false);
-            });
+                console.log(error);
+            }
+        } else {
+            toLogin();
+        }
     };
 
     // tăng số lượng sản phẩm
-    let axiosUpdateQuality = createAxiosUser(isUser, dispatch, updateQualitySuccess);
-    const increaseQuantity = (product) => {
+    const increaseQuantity = async (product) => {
         setIsLoader(true);
         const increase = product.quality + 1;
         const productOrder = {
             quality: increase,
             product_id: product.product_id,
         };
-        dispatch(updateQualityOrder(isUser?.data._id, isUser?.data.accessToken, productOrder, axiosUpdateQuality))
-            .then(() => {
-                dispatch(getOrder(isUser?.data._id, isUser?.data.accessToken, axiosOrder));
-            })
-            .catch((error) => {
-                console.error('Lỗi khi tăng số lượng sản phẩm:', error);
-                setIsLoader(false);
-            })
-            .finally(() => {
-                setIsLoader(false);
-            });
+        try {
+            const res = await axiosJWT.put(
+                `http://localhost:3001/api/order/quality/${isUser?.data._id}`,
+                productOrder,
+                {
+                    headers: { token: `Bearer ${isUser?.data.accessToken}` },
+                },
+            );
+            const productCartmap = res.data.data.order;
+            setProductCart(productCartmap);
+            setIsLoader(false);
+        } catch (error) {
+            console.log(error);
+        }
     };
+
     // giảm số lượng sản phẩm
-    const decreaseQuantity = (product) => {
+    const decreaseQuantity = async (product) => {
         if (product.quality > 1) {
             setIsLoader(true);
             const increase = product.quality - 1;
@@ -89,19 +117,22 @@ function Cart() {
                 quality: increase,
                 product_id: product.product_id,
             };
-            dispatch(updateQualityOrder(isUser?.data._id, isUser?.data.accessToken, productOrder, axiosOrder))
-                .then(() => {
-                    dispatch(getOrder(isUser?.data._id, isUser?.data.accessToken, axiosOrder));
-                })
-                .catch((error) => {
-                    console.error('Lỗi khi giảm số lượng sản phẩm:', error);
-                })
-                .finally(() => {
-                    setIsLoader(false);
-                });
+            try {
+                const res = await axiosJWT.put(
+                    `http://localhost:3001/api/order/quality/${isUser?.data._id}`,
+                    productOrder,
+                    {
+                        headers: { token: `Bearer ${isUser?.data.accessToken}` },
+                    },
+                );
+                const productCartmap = res.data.data.order;
+                setProductCart(productCartmap);
+                setIsLoader(false);
+            } catch (error) {
+                console.log(error);
+            }
         }
     };
-
     // check user
     if (!isUser) {
         return <Navigate to="/login" />;
@@ -162,8 +193,6 @@ function Cart() {
                                         <div className={cx('price', 'col')}>
                                             <p>{product.product_price} đ</p>
                                         </div>
-
-                                        {/* <Counter product={product} handleReload={handleReload} /> */}
 
                                         <div className={cx('numer-product')}>
                                             <div className={cx('counter-product')}>

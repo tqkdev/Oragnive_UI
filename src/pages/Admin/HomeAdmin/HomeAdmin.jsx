@@ -1,18 +1,16 @@
 import className from 'classnames/bind';
-import styles from './HomeAdmin.module.scss';
-
 import { useEffect, useState } from 'react';
-import * as request from '../../../utils/request';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { Link } from 'react-router-dom';
 import { faAngleRight, faArrowLeft, faHouse, faPlus } from '@fortawesome/free-solid-svg-icons';
-
-import { Link, useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useSelector, useDispatch } from 'react-redux';
-import { deleteProduct } from '../../../redux/Admin/adminApiRequest';
+import { Pagination } from '@mui/material';
+
+import styles from './HomeAdmin.module.scss';
+import * as request from '../../../utils/request';
 import { createAxiosAdmin } from '../../../components/axiosJWT/axiosJWT';
 import { loginSuccess } from '../../../redux/Admin/adminSlice';
 import Loader from '../../../components/Loader/Loader';
-import { Pagination } from '@mui/material';
 
 const cx = className.bind(styles);
 
@@ -26,7 +24,6 @@ function HomeAdmin() {
     const [page, setPage] = useState(1);
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
     let axiosJWT = createAxiosAdmin(isAdmin, dispatch, loginSuccess);
 
     // xử lí phân trang
@@ -39,10 +36,8 @@ function HomeAdmin() {
         const fetchApi = async () => {
             try {
                 setIsLoader(true);
-                // const res = await request.get('product');
                 const res = await request.get('product', {
                     params: {
-                        // q: searchParams.q,
                         page: page,
                         limit: 10,
                     },
@@ -63,13 +58,14 @@ function HomeAdmin() {
     // delete product
     const handleDelete = async (id) => {
         try {
-            await deleteProduct(id, dispatch, navigate, isAdmin?.data.accessToken, axiosJWT);
+            await axiosJWT.delete('http://localhost:3001/api/product/' + id, '', {
+                headers: { token: `Bearer ${isAdmin?.data.accessToken}` },
+            });
             setRefresh(!refresh);
         } catch (error) {
             console.log(error);
         }
     };
-
     return (
         <>
             {IsLoader && <Loader />}

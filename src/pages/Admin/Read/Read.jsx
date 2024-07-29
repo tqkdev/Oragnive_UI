@@ -1,10 +1,11 @@
+import { useEffect, useState } from 'react';
 import className from 'classnames/bind';
-import styles from './Read.module.scss';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faHouse, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+
+import styles from './Read.module.scss';
 import * as request from '../../../utils/request';
 
 const cx = className.bind(styles);

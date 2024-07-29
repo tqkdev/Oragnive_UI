@@ -1,23 +1,19 @@
-import className from 'classnames/bind';
-import styles from './Create.module.scss';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
-import { faAngleRight, faHouse } from '@fortawesome/free-solid-svg-icons';
 import { useState } from 'react';
-
+import { Link } from 'react-router-dom';
+import className from 'classnames/bind';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faAngleRight, faHouse } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
-import { addProduct } from '../../../redux/Admin/adminApiRequest';
+
+import styles from './Create.module.scss';
 import { loginSuccess } from '../../../redux/Admin/adminSlice';
 import { createAxiosAdmin } from '../../../components/axiosJWT/axiosJWT';
-import Loader from '../../../components/Loader/Loader';
 
 const cx = className.bind(styles);
 
 function Create() {
     const isAdmin = useSelector((state) => state.admin.login.currentAdmin);
-
-    const [IsLoader, setIsLoader] = useState(false);
 
     const [name, setName] = useState('');
     const [category, setCategory] = useState('');
@@ -29,13 +25,11 @@ function Create() {
     const [slug, setSlug] = useState('');
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-
     let axiosJWT = createAxiosAdmin(isAdmin, dispatch, loginSuccess);
 
-    function handleCreate(e) {
+    const handleCreate = async (e) => {
         e.preventDefault();
-        setIsLoader(true);
+
         const newProduct = {
             name: name,
             category: category,
@@ -46,13 +40,19 @@ function Create() {
             nguongoc: nguonGoc,
             slug: slug,
         };
-        addProduct(newProduct, dispatch, navigate, isAdmin?.data.accessToken, axiosJWT).finally(() => {
-            setIsLoader(false);
-        });
-    }
+        try {
+            await axiosJWT.post('http://localhost:3001/api/product', newProduct, {
+                withCredentials: 'include',
+                headers: { token: `Bearer ${isAdmin?.data.accessToken}`, 'Content-Type': 'application/json' },
+            });
+
+            window.location.href = '/admin/main';
+        } catch (error) {
+            console.log(error);
+        }
+    };
     return (
         <>
-            {IsLoader && <Loader />}
             <div className={cx('wrapper')}>
                 <div className={cx('inner')}>
                     <div className={cx('container')}>

@@ -1,16 +1,15 @@
-import className from 'classnames/bind';
-import styles from './Header.module.scss';
-import { Link } from 'react-router-dom';
 import { useState, useEffect, useRef } from 'react';
+import className from 'classnames/bind';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faGear, faRightFromBracket, faXmark } from '@fortawesome/free-solid-svg-icons';
 
-import { logoutSuccess } from '../../../redux/User/userSlice';
+import styles from './Header.module.scss';
+import { loginSuccess, logoutSuccess } from '../../../redux/User/userSlice';
 import { createAxiosUser } from '../../../components/axiosJWT/axiosJWT';
-import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import { getOrder, deleteProductOrder, logoutUser } from '../../../redux/User/userApiRequest';
-import { getOrderSuccess, deleteOrderSuccess } from '../../../redux/User/OrderSlice';
+import { logoutUser } from '../../../redux/User/userApiRequest';
 import Loader from '../../../components/Loader/Loader';
 
 const cx = className.bind(styles);
@@ -25,6 +24,7 @@ function Header() {
     const [issetting, setIsSetting] = useState(false);
     const [isiconBars, setIsIconBars] = useState(false);
     const [isNavCenter, setIsNavCenter] = useState(true);
+    const [productCart, setProductCart] = useState([]);
 
     const headerRef = useRef();
     const resultCartRef = useRef();
@@ -32,6 +32,9 @@ function Header() {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    let axiosJWT = createAxiosUser(isUser, dispatch, loginSuccess);
+    let axiosLogout = createAxiosUser(isUser, dispatch, logoutSuccess);
 
     const toLogin = () => {
         window.location.href = '/login';
@@ -117,60 +120,72 @@ function Header() {
         setIsNavCenter(false);
     };
 
-    // redux
     // logout
-    let axiosJWT = createAxiosUser(isUser, dispatch, logoutSuccess);
     const handleLogOut = () => {
         setIsLoader(true);
-        logoutUser(dispatch, navigate, isUser?.data.accessToken, axiosJWT).finally(() => {
+        logoutUser(dispatch, navigate, isUser?.data.accessToken, axiosLogout).finally(() => {
             setIsLoader(false);
         });
         localStorage.removeItem('persist:root');
     };
 
-    // handle giỏ hàng
-    const handleCartButtonClick = (event) => {
+    // lấy sản phẩm giỏ hàng
+    const handleCartButtonClick = async (event) => {
         // Ngăn chặn sự kiện click lan ra bên ngoài
         event.stopPropagation();
         // kiểm tra nếu đã đăng nhập thì hiện cart || login
         if (isUser) {
-            // getOrder(isUser?._id, dispatch, isUser?.accessToken, axiosOrder);
-            dispatch(getOrder(isUser?.data._id, isUser?.data.accessToken, axiosOrder));
+            try {
+                const res = await axiosJWT.get(`http://localhost:3001/api/order/${isUser?.data._id}`, {
+                    headers: { token: `Bearer ${isUser?.data.accessToken}` },
+                });
+                // console.log(res);
+                const setProductCartmap = res.data.data.order;
+                setProductCart(setProductCartmap);
+            } catch (error) {
+                console.log(error);
+            }
             toggleCart();
         } else {
             toLogin();
         }
     };
 
-    // lấy sản phẩm giỏ hàng
-    let axiosOrder = createAxiosUser(isUser, dispatch, getOrderSuccess);
-    const isOrdercart = useSelector((state) => state.order?.product.order);
-    const productCart = isOrdercart ? isOrdercart.data?.order : [];
-
     // Tính tổng tiền giỏ hàng
+    let totalPrice = 0;
     if (productCart?.length > 0) {
-        var totalPrice = productCart.reduce((accumulator, currentValue) => {
+        totalPrice = productCart.reduce((accumulator, currentValue) => {
             return accumulator + currentValue.product_price * currentValue.quality;
         }, 0);
     }
 
     // Xóa sản phẩm giỏ hàng
-    let axiosDeleteOrder = createAxiosUser(isUser, dispatch, deleteOrderSuccess);
-    const handleDeleteOrder = (productId) => {
+    const handleDeleteOrder = async (productId) => {
         setIsLoaderCart(true);
         const newProductOrder = {
             product_id: productId,
         };
-        dispatch(deleteProductOrder(isUser?.data._id, isUser?.data.accessToken, newProductOrder, axiosDeleteOrder))
-            .then(() => {
-                dispatch(getOrder(isUser?.data._id, isUser?.data.accessToken, axiosOrder));
-            })
-            .catch((error) => {
-                console.error('Lỗi khi xóa sản phẩm:', error);
-            })
-            .finally(() => {
+        // kiểm tra nếu đã đăng nhập thì hiện cart || login
+        if (isUser) {
+            try {
+                const res = await axiosJWT.put(
+                    'http://localhost:3001/api/order/delete/' + isUser?.data._id,
+                    newProductOrder,
+                    {
+                        headers: { token: `Bearer ${isUser?.data.accessToken}` },
+                    },
+                );
+                // console.log(res);
+                const setProductCartmap = res.data.data.order;
+                setProductCart(setProductCartmap);
                 setIsLoaderCart(false);
-            });
+            } catch (error) {
+                setIsLoaderCart(false);
+                console.log(error);
+            }
+        } else {
+            toLogin();
+        }
     };
 
     return (
@@ -302,7 +317,7 @@ function Header() {
                                         <h5>Tổng:</h5>
                                         {productCart?.length === 0 ? <h4>0đ</h4> : <h4>{totalPrice}đ</h4>}
                                     </div>
-                                    <Link to="/" className={cx('btn-thanhtoan')}>
+                                    <Link to="/cart" className={cx('btn-thanhtoan')}>
                                         Thanh Toán
                                     </Link>
                                 </div>

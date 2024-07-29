@@ -1,10 +1,10 @@
 import className from 'classnames/bind';
 import styles from './AdminLogin.module.scss';
 import { useState } from 'react';
-
-import { loginAdmin } from '../../../redux/Admin/adminApiRequest';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+
+import { loginAdmin } from '../../../redux/Admin/adminApiRequest';
 import Loader from '../../../components/Loader/Loader';
 
 const cx = className.bind(styles);

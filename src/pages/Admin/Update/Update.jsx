@@ -1,15 +1,14 @@
-import className from 'classnames/bind';
-import styles from './Update.module.scss';
 import { useEffect, useState } from 'react';
-import * as request from '../../../utils/request';
+import className from 'classnames/bind';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faHouse, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
-import { useSelector, useDispatch } from 'react-redux';
-import { Link, useNavigate, useParams } from 'react-router-dom';
-import { updateSuccess } from '../../../redux/Admin/productSlice';
+import styles from './Update.module.scss';
+import * as request from '../../../utils/request';
 import { createAxiosAdmin } from '../../../components/axiosJWT/axiosJWT';
-import { updateProduct } from '../../../redux/Admin/adminApiRequest';
+import { loginSuccess } from '../../../redux/Admin/adminSlice';
 
 const cx = className.bind(styles);
 
@@ -51,10 +50,9 @@ function Update() {
     const [slug, setSlug] = useState('');
 
     const dispatch = useDispatch();
-    const navigate = useNavigate();
-    let axiosJWT = createAxiosAdmin(isAdmin, dispatch, updateSuccess);
+    let axiosJWT = createAxiosAdmin(isAdmin, dispatch, loginSuccess);
 
-    function handleUpdate(e) {
+    const handleUpdate = async (e) => {
         e.preventDefault();
         const newProduct = {
             name: name === '' ? nameDefault : name,
@@ -67,8 +65,15 @@ function Update() {
             slug: slug === '' ? slugDefault : slug,
         };
 
-        updateProduct(params.slug, dispatch, navigate, isAdmin?.data.accessToken, newProduct, axiosJWT);
-    }
+        try {
+            await axiosJWT.put('http://localhost:3001/api/product/' + params.slug, newProduct, {
+                headers: { token: `Bearer ${isAdmin?.data.accessToken}` },
+            });
+            window.location.href = '/admin/main';
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     return (
         <div className={cx('wrapper')}>
