@@ -23,7 +23,7 @@
 
     ```sh
     git clone git@github.com:tqkdev/Oragnive_UI.git
-    cd app/Whatsapp_Clone_Sever
+    cd app/Oragnive_UI
     ```
 
 2. Cài đặt các phụ thuộc:
@@ -35,11 +35,11 @@
 3. Tạo file `.env` ở thư mục gốc của frontend và thêm nội dung sau:
 
     ```env
-    REACT_APP_API_URL=<react_app_api_url>
+   VITE_URL_BACKEND=<vite_url_backend>
     ```
 
 4. Khởi động server phát triển frontend:
 
     ```sh
-    npm start
+    npm run dev
     ```
