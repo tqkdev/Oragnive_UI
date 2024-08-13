@@ -124,7 +124,9 @@ function About() {
                     },
                 });
                 const productmap = res.data.products;
+                const totalPages = res.data.pagination.totalPages;
                 setProducts(productmap);
+                setTotalPages(totalPages);
             } catch (error) {
                 console.log('error');
             }
