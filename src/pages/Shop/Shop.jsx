@@ -84,7 +84,8 @@ function About() {
 
     // get data mặc định all
     useEffect(() => {
-        fetchApi('all');
+        fetchApi(activeFilter);
+        window.scrollTo({ top: 200, left: 0, behavior: 'smooth' });
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [page]);
 
@@ -134,6 +135,7 @@ function About() {
     };
     const handleFilterClick = (filter) => {
         setActiveFilter(filter);
+        setPage(1);
     };
 
     // thêm sản phẩm vào giỏ hàng
