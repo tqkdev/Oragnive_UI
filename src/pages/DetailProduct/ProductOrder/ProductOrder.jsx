@@ -51,8 +51,8 @@ function ProductOrder({ handleShowSwal, productDetail }) {
             product_name: product.name,
             product_image: product.image_url,
             product_price: product.price,
-            product_slug: product.slug,
-            quality: Number(quantity),
+            product_category: product.category,
+            quantity: Number(quantity),
         };
         try {
             await axiosJWT.put(`${import.meta.env.VITE_URL_BACKEND}/order/${isUser?.data._id}`, newProductOrder, {

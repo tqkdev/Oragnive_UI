@@ -3,36 +3,39 @@ import className from 'classnames/bind';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faBars,
+    faChartPie,
     faExclamation,
-    faGauge,
-    faGear,
-    faHouse,
     faTag,
     faThumbTack,
+    faTicket,
+    faUser,
     faXmark,
 } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
-import { faFile, faNewspaper } from '@fortawesome/free-regular-svg-icons';
+import { Link, useLocation } from 'react-router-dom';
+import { faNewspaper } from '@fortawesome/free-regular-svg-icons';
 
-import styles from './SibarAdmin.module.scss';
+import styles from './Sidebar.module.scss';
 
 const cx = className.bind(styles);
 
-function SibarAdmin() {
-    const [isiconBars, setIsIconBars] = useState(false);
+function Sidebar() {
     const [isAside, setIsAside] = useState(true);
+    const [islopphu, setIslopphu] = useState(false);
     const [isToast, setIsToast] = useState(false);
     let timeoutId;
+    // Kiểm tra URL hiện tại và trả về class 'active' cho các liên kết tương ứng
+    const location = useLocation();
+    const isActive = (path) => location.pathname.startsWith(path);
 
     // set bars and navcenter
     useEffect(() => {
         const handleResize = () => {
             if (window.innerWidth < 740) {
-                setIsIconBars(true);
                 setIsAside(false);
+                setIslopphu(true);
             } else {
-                setIsIconBars(false);
                 setIsAside(true);
+                setIslopphu(false);
             }
         };
         handleResize();
@@ -43,13 +46,7 @@ function SibarAdmin() {
     }, []);
 
     const handleOpenNavCenter = () => {
-        setIsIconBars(false);
-        setIsAside(true);
-    };
-
-    const handleCloseNavCenter = () => {
-        setIsIconBars(true);
-        setIsAside(false);
+        setIsAside(!isAside);
     };
 
     // toast mess
@@ -87,53 +84,59 @@ function SibarAdmin() {
                     </button>
                 </div>
             )}
-            {isiconBars ? (
-                <div onClick={handleOpenNavCenter} className={cx('icon-bars')}>
-                    <FontAwesomeIcon icon={faBars} />
-                </div>
-            ) : (
-                <div onClick={handleCloseNavCenter} className={cx('icon-Xmark')}>
-                    <FontAwesomeIcon icon={faXmark} />
-                </div>
-            )}
+
+            <div onClick={handleOpenNavCenter} className={cx('icon-bars')}>
+                <FontAwesomeIcon icon={faBars} />
+            </div>
+            {isAside && islopphu && <div onClick={handleOpenNavCenter} className={cx('lopphu')}></div>}
             {isAside && (
                 <aside className={cx('wrapper')}>
                     <div className={cx('inner')}>
                         <div className={cx('container')}>
-                            <div className={cx('title-header')}>
-                                <FontAwesomeIcon className={cx('icon-house')} icon={faHouse} />
-                                <h3 className={cx('title')}>ADMIN PANEL</h3>
+                            <div className={cx('box-logo')}>
+                                <div className={cx('logo')}>
+                                    <img
+                                        src="https://res.cloudinary.com/dyoctwffi/image/upload/v1689779897/ORGAVIVE/icons/logo-02_dntnhy.png"
+                                        alt="logo"
+                                    />
+                                </div>
                             </div>
                             <div className={cx('option')}>
                                 <ul className={cx('ul')}>
-                                    <li className={cx('option-li', 'active')}>
-                                        <FontAwesomeIcon className={cx('icon-option')} icon={faThumbTack} />
-                                        <Link className={cx('option-link')}>Products</Link>
+                                    <li className={cx('option-li', { active: isActive('/admin/main') })}>
+                                        <Link to={'/admin/main'}>
+                                            <FontAwesomeIcon className={cx('icon-option')} icon={faChartPie} />
+                                            <p className={cx('option-link')}> Tổng Quan</p>
+                                        </Link>
+                                    </li>
+                                    <li className={cx('option-li', { active: isActive('/admin/product') })}>
+                                        <Link to={'/admin/product'}>
+                                            <FontAwesomeIcon className={cx('icon-option')} icon={faThumbTack} />
+                                            <p className={cx('option-link')}> Sản phẩm</p>
+                                        </Link>
+                                    </li>
+                                    <li className={cx('option-li', { active: isActive('/admin/order') })}>
+                                        <Link to={'/admin/order'}>
+                                            <FontAwesomeIcon className={cx('icon-option')} icon={faNewspaper} />
+                                            <p className={cx('option-link')}>Đơn đặt hàng</p>
+                                        </Link>
                                     </li>
                                     <li className={cx('option-li')} onClick={handleOpenToast}>
-                                        <FontAwesomeIcon className={cx('icon-option')} icon={faNewspaper} />
-                                        <Link className={cx('option-link')}>Templates</Link>
-                                    </li>
-                                    <li className={cx('option-li')} onClick={handleOpenToast}>
-                                        <FontAwesomeIcon className={cx('icon-option')} icon={faGauge} />
-                                        <Link className={cx('option-link')}>Dashboard</Link>
+                                        <FontAwesomeIcon className={cx('icon-option')} icon={faTicket} />
+                                        <Link className={cx('option-link')}>Kho Voucher</Link>
                                     </li>
 
                                     <li className={cx('option-li')} onClick={handleOpenToast}>
                                         <FontAwesomeIcon className={cx('icon-option')} icon={faTag} />
-                                        <Link className={cx('option-link')}>Sales</Link>
-                                    </li>
-                                    <li className={cx('option-li')} onClick={handleOpenToast}>
-                                        <FontAwesomeIcon className={cx('icon-option')} icon={faFile} />
-                                        <Link className={cx('option-link')}>Service</Link>
+                                        <Link className={cx('option-link')}>Dịch vụ</Link>
                                     </li>
                                 </ul>
                             </div>
                         </div>
                         <div className={cx('setting')} onClick={handleOpenToast}>
                             <button className={cx('btn-setting')}>
-                                <FontAwesomeIcon className={cx('icon-setting')} icon={faGear} />
-                                <p className={cx('text')}>Setting</p>
+                                <FontAwesomeIcon className={cx('icon-setting')} icon={faUser} />
+                                <p className={cx('text')}>Tài khoản của tôi</p>
                             </button>
                         </div>
                     </div>
@@ -143,4 +146,4 @@ function SibarAdmin() {
     );
 }
 
-export default SibarAdmin;
+export default Sidebar;

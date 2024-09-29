@@ -7,8 +7,8 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useSelector, useDispatch } from 'react-redux';
 
 import styles from './Create.module.scss';
-import { loginSuccess } from '../../../redux/Admin/adminSlice';
-import { createAxiosAdmin } from '../../../components/axiosJWT/axiosJWT';
+import { loginSuccess } from '../../../../redux/Admin/adminSlice';
+import { createAxiosAdmin } from '../../../../components/axiosJWT/axiosJWT';
 
 const cx = className.bind(styles);
 
@@ -58,7 +58,7 @@ function Create() {
                     <div className={cx('container')}>
                         <div className={cx('line')}>
                             <div className={cx('header-path')}>
-                                <Link to={'/admin/main'}>
+                                <Link to={'/admin/product'}>
                                     <FontAwesomeIcon className={cx('path-iconback')} icon={faArrowLeft} />
                                 </Link>
                                 <div className={cx('path')}>

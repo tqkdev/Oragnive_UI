@@ -1,0 +1,116 @@
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+.inner {
+    width: 100%;
+    border-top-right-radius: 20px;
+}
+
+//////////
+.baoquanh {
+    background-color: var(--background);
+    margin-bottom: 5px;
+}
+.title-header {
+    line-height: 28px;
+    padding: 10px 10px 0;
+}
+.admin {
+    display: flex;
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    overflow: hidden;
+
+    img {
+        width: 100%;
+        object-fit: cover;
+    }
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+.info {
+    padding: 2px 5px;
+    display: flex;
+    color: #000;
+}
+.name {
+    line-height: 30px;
+}
+/////////
+.listproduct {
+    flex: 1;
+}
+
+.bg-item {
+    padding: 10px 5px;
+}
+.item {
+    width: 100%;
+    display: flex;
+    border: 1px #ededed solid;
+    margin-top: 3px;
+    background-color: white;
+}
+.img-item {
+    width: 80px;
+    height: 80px;
+    overflow: hidden;
+    border: 1px #ededed solid;
+    img {
+        width: 100%;
+        object-fit: cover;
+        transition: all 0.4s;
+    }
+
+    &:hover {
+        border: 1px var(--border) solid;
+    }
+}
+.info-item {
+    padding: 0 20px;
+    overflow: hidden;
+}
+
+.title-item {
+    font-size: 1.8rem;
+    line-height: 3px;
+    color: var(--text-color-1);
+    display: inline-block;
+    transition: all 0.4s;
+
+    &:hover {
+        cursor: pointer;
+        color: var(--border);
+    }
+}
+.price-item {
+    color: var(--text-color-3);
+    font-size: 1.5rem;
+}
+.description-item {
+    font-size: 1.4rem;
+    color: var(--text-color-2);
+}
+////shop-page
+.shop-page {
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+@media only screen and (max-width: 500px) {
+    .total-product,
+    .total-price {
+        width: 100%;
+    }
+}

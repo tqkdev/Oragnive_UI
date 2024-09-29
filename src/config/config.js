@@ -2,9 +2,13 @@ const routes = {
     home: '/',
     admin: '/admin',
     main: 'admin/main',
-    create: 'admin/main/create',
-    update: 'admin/main/update/:slug',
-    read: 'admin/main/read/:slug',
+    product: 'admin/product',
+    create: 'admin/product/create',
+    update: 'admin/product/update/:slug',
+    read: 'admin/product/read/:slug',
+    order: 'admin/order',
+
+    //////
     about: '/about',
     shop: '/shop',
     contact: '/contact',
@@ -14,6 +18,8 @@ const routes = {
     register: '/register',
     search: '/search/:q',
     notfound: '*',
+
+    infoUser: '/infouser',
 };
 
 export default routes;

@@ -1,18 +1,18 @@
 import className from 'classnames/bind';
-import styles from './HeaderSibar.module.scss';
-import HeaderAdmin from '../../pages/Admin/HeaderAdmin/HeaderAdmin';
-import SibarAdmin from '../../pages/Admin/SibarAmin/SibarAdmin';
+import styles from './Information.module.scss';
+import Sidebar from '../components/Sidebar/Sidebar';
+import HeaderAdmin from './HeaderAdmin/HeaderAdmin';
 
 const cx = className.bind(styles);
 
 // eslint-disable-next-line react/prop-types
-function HeaderSibar({ children }) {
+function Information({ children }) {
     return (
         <div className={cx('wrapper')}>
-            <HeaderAdmin />
             <div className={cx('container')}>
+                <Sidebar />
                 <div className={cx('inner')}>
-                    <SibarAdmin />
+                    <HeaderAdmin />
                     <div className={cx('children')}>{children}</div>
                 </div>
             </div>
@@ -20,4 +20,4 @@ function HeaderSibar({ children }) {
     );
 }
 
-export default HeaderSibar;
+export default Information;

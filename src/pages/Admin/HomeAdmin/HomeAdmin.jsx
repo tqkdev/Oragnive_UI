@@ -1,138 +1,96 @@
 import className from 'classnames/bind';
-import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { faAngleRight, faArrowLeft, faHouse, faPlus } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { useSelector, useDispatch } from 'react-redux';
-import { Pagination } from '@mui/material';
-
 import styles from './HomeAdmin.module.scss';
-import * as request from '../../../utils/request';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSackDollar } from '@fortawesome/free-solid-svg-icons/faSackDollar';
+import { faCartShopping } from '@fortawesome/free-solid-svg-icons';
+import TickPlacementBars from './TickPlacementBars/TickPlacementBars';
+import BasicPie from './BasicPie/BasicPie';
+import { useDispatch, useSelector } from 'react-redux';
+import { useEffect, useState } from 'react';
 import { createAxiosAdmin } from '../../../components/axiosJWT/axiosJWT';
 import { loginSuccess } from '../../../redux/Admin/adminSlice';
-import Loader from '../../../components/Loader/Loader';
 
 const cx = className.bind(styles);
 
 function HomeAdmin() {
     const isAdmin = useSelector((state) => state.admin.login.currentAdmin);
-
-    const [allProducts, setallProducts] = useState([]);
-    const [refresh, setRefresh] = useState(false);
-    const [IsLoader, setIsLoader] = useState(false);
-    const [totalPages, setTotalPages] = useState(0);
-    const [page, setPage] = useState(1);
+    const [productPrice, setProductPrice] = useState(0);
+    const [quantity, setQuantity] = useState(0);
+    const [basicPie, setBasicPie] = useState([]);
+    const [tickPlacementBars, setTickPlacementBars] = useState([]);
 
     const dispatch = useDispatch();
     let axiosJWT = createAxiosAdmin(isAdmin, dispatch, loginSuccess);
 
-    // xử lí phân trang
-    const handleChange = (event, value) => {
-        setPage(value);
-    };
-
-    // get product
+    // lấy sản phẩm giỏ hàng
     useEffect(() => {
-        const fetchApi = async () => {
-            try {
-                setIsLoader(true);
-                const res = await request.get('product', {
-                    params: {
-                        page: page,
-                        limit: 10,
-                    },
-                });
-                const totalPages = res.data.pagination.totalPages;
-                setTotalPages(totalPages);
-                const productmap = res.data.products;
-                setallProducts(productmap);
-                setIsLoader(false);
-            } catch (error) {
-                console.log(error);
+        const handleFetchData = async () => {
+            if (isAdmin) {
+                try {
+                    const res = await axiosJWT.get(`${import.meta.env.VITE_URL_BACKEND}/placedOrder/numberCategory`, {
+                        headers: { token: `Bearer ${isAdmin?.data.accessToken}` },
+                    });
+                    setProductPrice(res.data.data.product_price);
+                    setQuantity(res.data.data.quantity);
+                    setBasicPie(res.data.data.BasicPie);
+                    setTickPlacementBars(res.data.data.TickPlacementBars);
+                } catch (error) {
+                    console.log(error);
+                }
             }
         };
+        handleFetchData();
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }, []);
 
-        fetchApi();
-    }, [refresh, page]);
-
-    // delete product
-    const handleDelete = async (id) => {
-        try {
-            await axiosJWT.delete(`${import.meta.env.VITE_URL_BACKEND}/product/` + id, '', {
-                headers: { token: `Bearer ${isAdmin?.data.accessToken}` },
-            });
-            setRefresh(!refresh);
-        } catch (error) {
-            console.log(error);
+    function formatPrice(productPrice) {
+        if (productPrice >= 1000000) {
+            return (productPrice / 1000000).toFixed(1) + ' triệu';
+        } else if (productPrice >= 1000) {
+            return (productPrice / 1000).toFixed(0) + ' nghìn';
         }
-    };
+        return productPrice.toLocaleString('vi-VN'); // Hiện số gốc nếu nhỏ hơn 1,000
+    }
+
     return (
-        <>
-            {IsLoader && <Loader />}
-            <div className={cx('wrapper')}>
-                <div className={cx('inner')}>
-                    <div className={cx('container')}>
-                        <div className={cx('line')}>
-                            <div className={cx('header-path')}>
-                                <FontAwesomeIcon className={cx('path-iconback')} icon={faArrowLeft} />
-                                <div className={cx('path')}>
-                                    <FontAwesomeIcon className={cx('path-iconhouse')} icon={faHouse} />
-                                    <FontAwesomeIcon className={cx('path-iconright')} icon={faAngleRight} />
-                                    <p className={cx('path-lv1')}>Products</p>
-                                </div>
+        <div className={cx('wrapper')}>
+            <div className={cx('inner')}>
+                <div className={cx('container-card')}>
+                    <div className={cx('total-product')}>
+                        <div className={cx('card-content')}>
+                            <div className={cx('card-title')}>Tổng doanh thu</div>
+                            <div className={cx('card-value')}> {formatPrice(productPrice)}</div>
+                            <div className={cx('card-footer')}>
+                                {/* <span className={cx('card-percentage')}>tăng 12%</span> */}
+                                <span className={cx('since-last-month')}>within 7 days</span>
                             </div>
                         </div>
-
-                        <div className={cx('box-create')}>
-                            <h2 className={cx('title')}>List of Products</h2>
-                            <Link className={cx('btn-create')} to={'/admin/main/create'}>
-                                <FontAwesomeIcon className={cx('icon-plus')} icon={faPlus} />
-                                <p className={cx('text-add')}>Add</p>
-                            </Link>
+                        <div className={cx('card-icon')}>
+                            <FontAwesomeIcon className={cx('icon-dollar')} icon={faSackDollar} />
                         </div>
-                        <div className={cx('list-product')}>
-                            <div className={cx('header')}>
-                                <div className={cx('header-name')}>Name</div>
-                                <div className={cx('header-category')}>Category</div>
-                                <div className={cx('header-des')}>description</div>
-                                <div className={cx('header-action')}>Action</div>
+                    </div>
+                    <div className={cx('total-price')}>
+                        <div className={cx('card-content')}>
+                            <div className={cx('card-title')}>Tổng số lượng sản phẩm</div>
+                            <div className={cx('card-value')}> {quantity}</div>
+                            <div className={cx('card-footer')}>
+                                {/* <span className={cx('card-percentage')}>tăng 12%</span> */}
+                                <span className={cx('since-last-month')}>within 7 days</span>
                             </div>
-
-                            {allProducts?.map((product) => (
-                                <div key={product._id} className={cx('product')}>
-                                    <div className={cx('header-name', 'product-name')}>{product.name}</div>
-                                    <div className={cx('header-category', 'product-category')}> {product.category}</div>
-                                    <div className={cx('header-des', 'product-des')}>{product.description}</div>
-                                    <div className={cx('header-action')}>
-                                        <Link to={`/admin/main/read/${product._id}`} className={cx('btn-read')}>
-                                            Read
-                                        </Link>
-                                        <Link to={`/admin/main/update/${product._id}`} className={cx('btn-edit')}>
-                                            Edit
-                                        </Link>
-                                        <button onClick={() => handleDelete(product._id)} className={cx('btn-delete')}>
-                                            Delete
-                                        </button>
-                                    </div>
-                                </div>
-                            ))}
                         </div>
-                        <div className={cx('shop-page')}>
-                            <Pagination
-                                count={totalPages}
-                                page={page}
-                                // size="large"
-                                variant="outlined"
-                                shape="rounded"
-                                onChange={handleChange}
-                            ></Pagination>
+                        <div className={cx('card-icon')}>
+                            <FontAwesomeIcon className={cx('icon-shopping')} icon={faCartShopping} />
                         </div>
                     </div>
                 </div>
+                <div className={cx('container-circle')}>
+                    <BasicPie basicPie={basicPie} />
+                </div>
+                <div className={cx('container-chart')}>
+                    <TickPlacementBars tickPlacementBars={tickPlacementBars} />
+                </div>
             </div>
-        </>
+        </div>
     );
 }
-
-// eslint-disable-next-line react-refresh/only-export-components
 export default HomeAdmin;

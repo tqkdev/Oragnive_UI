@@ -155,7 +155,7 @@ function Header() {
     let totalPrice = 0;
     if (productCart?.length > 0) {
         totalPrice = productCart.reduce((accumulator, currentValue) => {
-            return accumulator + currentValue.product_price * currentValue.quality;
+            return accumulator + currentValue.product_price * currentValue.quantity;
         }, 0);
     }
 
@@ -241,10 +241,10 @@ function Header() {
 
                                 {issetting && (
                                     <div ref={avatarRef} className={cx('setting')}>
-                                        <div className={cx('setting-option')}>
+                                        <Link to={'/infouser'} className={cx('setting-option')}>
                                             <FontAwesomeIcon className={cx('option-icon')} icon={faGear} />
                                             <h3 className={cx('option-title')}>Setting</h3>
-                                        </div>
+                                        </Link>
                                         <div className={cx('setting-option')} onClick={handleLogOut}>
                                             <FontAwesomeIcon className={cx('option-icon')} icon={faRightFromBracket} />
                                             <h3 className={cx('option-title')}>Log out</h3>
@@ -288,11 +288,11 @@ function Header() {
                                                 </div>
                                                 <div className={cx('quality')}>
                                                     <h5>X</h5>
-                                                    <h3>{product.quality}</h3>
+                                                    <h3>{product.quantity}</h3>
                                                 </div>
 
                                                 <div className={cx('info-quality')}>
-                                                    <h4>{product.product_price * product.quality}đ</h4>
+                                                    <h4>{product.product_price * product.quantity}đ</h4>
                                                 </div>
                                             </div>
                                             <div

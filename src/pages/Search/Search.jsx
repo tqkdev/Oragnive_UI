@@ -35,8 +35,8 @@ function Search() {
             product_name: product.name,
             product_image: product.image_url,
             product_price: product.price,
-            product_slug: product.slug,
-            quality: 1,
+            product_category: product.category,
+            quantity: 1,
         };
         if (isUser) {
             try {

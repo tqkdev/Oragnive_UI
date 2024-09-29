@@ -6,7 +6,7 @@ import { faAngleRight, faHouse, faArrowLeft } from '@fortawesome/free-solid-svg-
 import { useParams } from 'react-router-dom';
 
 import styles from './Read.module.scss';
-import * as request from '../../../utils/request';
+import * as request from '../../../../utils/request';
 
 const cx = className.bind(styles);
 
@@ -32,7 +32,7 @@ function Read() {
                 <div className={cx('container')}>
                     <div className={cx('line')}>
                         <div className={cx('header-path')}>
-                            <Link to={'/admin/main'}>
+                            <Link to={'/admin/product'}>
                                 <FontAwesomeIcon className={cx('path-iconback')} icon={faArrowLeft} />
                             </Link>
                             <div className={cx('path')}>
@@ -88,7 +88,7 @@ function Read() {
                                 <div className={cx('more')}>{productDetail.slug}</div>
                             </div>
 
-                            <Link to={`/admin/main/update/${productDetail._id}`} className={cx('btn-edit')}>
+                            <Link to={`/admin/product/update/${productDetail._id}`} className={cx('btn-edit')}>
                                 EDIT
                             </Link>
                         </form>

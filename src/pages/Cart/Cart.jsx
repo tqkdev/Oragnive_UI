@@ -17,6 +17,7 @@ function Cart() {
     const isUser = useSelector((state) => state.user.login.currentUser);
 
     const [IsLoader, setIsLoader] = useState(false);
+    const [reload, setReload] = useState(false);
     const [productCart, setProductCart] = useState([]);
 
     const dispatch = useDispatch();
@@ -46,13 +47,14 @@ function Cart() {
             }
         };
         handleOrderCart();
-    }, []);
+        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+    }, [reload]);
 
     // Tính tổng tiền
     let totalPrice = 0;
     if (productCart?.length > 0) {
         totalPrice = productCart.reduce((accumulator, currentValue) => {
-            return accumulator + currentValue.product_price * currentValue.quality;
+            return accumulator + currentValue.product_price * currentValue.quantity;
         }, 0);
     }
 
@@ -65,16 +67,16 @@ function Cart() {
         // kiểm tra nếu đã đăng nhập thì hiện cart || login
         if (isUser) {
             try {
-                const res = await axiosJWT.put(
+                await axiosJWT.put(
                     `${import.meta.env.VITE_URL_BACKEND}/order/delete/` + isUser?.data._id,
                     newProductOrder,
                     {
                         headers: { token: `Bearer ${isUser?.data.accessToken}` },
                     },
                 );
-                const setProductCartmap = res.data.data.order;
-                setProductCart(setProductCartmap);
+
                 setIsLoader(false);
+                setReload(!reload);
             } catch (error) {
                 setIsLoader(false);
                 console.log(error);
@@ -87,22 +89,18 @@ function Cart() {
     // tăng số lượng sản phẩm
     const increaseQuantity = async (product) => {
         setIsLoader(true);
-        const increase = product.quality + 1;
+        const increase = product.quantity + 1;
         const productOrder = {
-            quality: increase,
+            quantity: increase,
             product_id: product.product_id,
         };
         try {
-            const res = await axiosJWT.put(
-                `${import.meta.env.VITE_URL_BACKEND}/order/quality/${isUser?.data._id}`,
-                productOrder,
-                {
-                    headers: { token: `Bearer ${isUser?.data.accessToken}` },
-                },
-            );
-            const productCartmap = res.data.data.order;
-            setProductCart(productCartmap);
+            await axiosJWT.put(`${import.meta.env.VITE_URL_BACKEND}/order/quality/${isUser?.data._id}`, productOrder, {
+                headers: { token: `Bearer ${isUser?.data.accessToken}` },
+            });
+
             setIsLoader(false);
+            setReload(!reload);
         } catch (error) {
             console.log(error);
         }
@@ -110,29 +108,54 @@ function Cart() {
 
     // giảm số lượng sản phẩm
     const decreaseQuantity = async (product) => {
-        if (product.quality > 1) {
+        if (product.quantity > 1) {
             setIsLoader(true);
-            const increase = product.quality - 1;
+            const increase = product.quantity - 1;
             const productOrder = {
-                quality: increase,
+                quantity: increase,
                 product_id: product.product_id,
             };
             try {
-                const res = await axiosJWT.put(
+                await axiosJWT.put(
                     `${import.meta.env.VITE_URL_BACKEND}/order/quality/${isUser?.data._id}`,
                     productOrder,
                     {
                         headers: { token: `Bearer ${isUser?.data.accessToken}` },
                     },
                 );
-                const productCartmap = res.data.data.order;
-                setProductCart(productCartmap);
+
                 setIsLoader(false);
+                setReload(!reload);
             } catch (error) {
                 console.log(error);
             }
         }
     };
+
+    const handleDatHang = async () => {
+        if (productCart.length > 0) {
+            const newDataDatHang = {
+                user_id: isUser?.data._id, // ID của người dùng
+                order_items: productCart,
+            };
+
+            try {
+                setIsLoader(true);
+                await axiosJWT.post(`${import.meta.env.VITE_URL_BACKEND}/placedOrder/create`, newDataDatHang, {
+                    headers: { token: `Bearer ${isUser?.data.accessToken}` },
+                });
+
+                setIsLoader(false);
+                setReload(!reload);
+                window.location.href = '/infouser';
+            } catch (error) {
+                setIsLoader(false);
+
+                console.log(error);
+            }
+        }
+    };
+
     // check user
     if (!isUser) {
         return <Navigate to="/login" />;
@@ -204,7 +227,7 @@ function Cart() {
                                                 >
                                                     -
                                                 </button>
-                                                <p className={cx('quantity')}>{product.quality}</p>
+                                                <p className={cx('quantity')}>{product.quantity}</p>
 
                                                 <button
                                                     className={cx('btn-increase')}
@@ -220,7 +243,7 @@ function Cart() {
                                         {/*  */}
 
                                         <div className={cx('total-price', 'col')}>
-                                            <p>{product.product_price * product.quality} đ</p>
+                                            <p>{product.product_price * product.quantity} đ</p>
                                         </div>
 
                                         <div className={cx('btn-delete', 'col', 'repon')}>
@@ -250,7 +273,14 @@ function Cart() {
                                 )}
                             </div>
                             <div className={cx('dathang')}>
-                                <button className={cx('btn-dathang')}>Đặt hàng</button>
+                                {productCart?.length > 0 && (
+                                    <button onClick={handleDatHang} className={cx('btn-dathang')}>
+                                        Đặt hàng
+                                    </button>
+                                )}
+                                {/* <button onClick={handleDatHang} className={cx('btn-dathang')}>
+                                    Đặt hàng
+                                </button> */}
                             </div>
                         </div>
                     </div>

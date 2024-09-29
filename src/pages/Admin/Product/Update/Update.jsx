@@ -6,9 +6,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faAngleRight, faHouse, faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 import styles from './Update.module.scss';
-import * as request from '../../../utils/request';
-import { createAxiosAdmin } from '../../../components/axiosJWT/axiosJWT';
-import { loginSuccess } from '../../../redux/Admin/adminSlice';
+import * as request from '../../../../utils/request';
+import { createAxiosAdmin } from '../../../../components/axiosJWT/axiosJWT';
+import { loginSuccess } from '../../../../redux/Admin/adminSlice';
 
 const cx = className.bind(styles);
 
@@ -81,7 +81,7 @@ function Update() {
                 <div className={cx('container')}>
                     <div className={cx('line')}>
                         <div className={cx('header-path')}>
-                            <Link to={'/admin/main'}>
+                            <Link to={'/admin/product'}>
                                 <FontAwesomeIcon className={cx('path-iconback')} icon={faArrowLeft} />
                             </Link>
                             <div className={cx('path')}>
